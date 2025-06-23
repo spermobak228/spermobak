@@ -1,0 +1,911 @@
+/* Общие стили для профиля */
+* {
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
+    -khtml-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+}
+
+html, body {
+    overscroll-behavior: none;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    touch-action: auto;
+}
+
+input, textarea {
+    -webkit-user-select: text !important;
+    -khtml-user-select: text !important;
+    -moz-user-select: text !important;
+    -ms-user-select: text !important;
+    user-select: text !important;
+}
+
+/* Стили для страницы профиля */
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px 0;
+    width: 100%;
+}
+
+/* Новый контейнер для верхней части профиля */
+.profile-header {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px;
+    margin-bottom: 15px;
+}
+
+.profile-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 15px;
+}
+
+.profile-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: var(--tg-theme-secondary-bg-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.profile-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    font-weight: bold;
+    color: var(--tg-theme-text-color);
+    background-color: var(--tg-theme-button-color);
+}
+
+.profile-name {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: var(--tg-theme-text-color);
+    max-width: 100%;
+    text-align: left;
+}
+
+.profile-balance {
+    position: relative;
+    font-size: 32px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    letter-spacing: -1px;
+    gap: 6px;
+}
+
+.profile-balance .diamond {
+    font-size: 26px;
+    margin-left: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-balance .crystal-icon {
+    width: 26px;
+    height: 26px;
+    vertical-align: middle;
+    position: relative;
+    top: 0px;
+}
+
+/* Стиль круглой кнопки пополнения баланса */
+.add-balance-circle-button {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: var(--tg-theme-button-color);
+    color: var(--tg-theme-button-text-color);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+    margin-left: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.add-balance-circle-button:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(255, 255, 255, 0.2), transparent);
+    opacity: 0.6;
+    border-radius: 50%;
+}
+
+.add-balance-circle-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+.add-balance-circle-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+}
+
+.plus-icon {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1;
+    display: block;
+    text-align: center;
+    position: relative;
+    top: -1px; /* Небольшая корректировка для визуального центрирования */
+}
+
+/* Убираем старую кнопку пополнения баланса */
+.add-balance-button {
+    display: none;
+}
+
+.profile-tabs {
+    display: flex;
+    width: 100%;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: var(--tg-theme-secondary-bg-color);
+    height: 46px;
+    position: relative;
+    padding: 5px;
+}
+
+.profile-tabs:before {
+    content: '';
+    position: absolute;
+    height: calc(100% - 6px);
+    width: calc(50% - 6px);
+    left: 3px;
+    top: 3px;
+    background-color: var(--tg-theme-bg-color);
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+    z-index: 0;
+    box-sizing: border-box;
+}
+
+.profile-tabs.friends-selected:before {
+    transform: translateX(calc(100% + 6px));
+}
+
+.profile-tab {
+    flex: 1;
+    text-align: center;
+    padding: 0;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    z-index: 1;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s;
+    position: relative;
+    border-radius: 8px;
+}
+
+.profile-tab.active {
+    color: var(--tg-theme-text-color);
+    background-color: transparent;
+}
+
+.profile-tab:not(.active) {
+    opacity: 1;
+}
+
+.tab-content {
+    width: 100%;
+    min-height: 300px;
+}
+
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+/* Стили для списка подарков */
+.gifts-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+    width: 100%;
+}
+
+@media (max-width: 360px) {
+    .gifts-list {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Обновленные стили для элемента подарка */
+.gift-item {
+    background-color: var(--tg-theme-secondary-bg-color);
+    border-radius: 15px;
+    padding: 12px;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    aspect-ratio: 1 / 1.3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.gift-item:hover {
+    transform: translateY(-2px);
+}
+
+.gift-icon {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gift-icon img, 
+.gift-icon tgs-player {
+    max-width: 80%;
+    max-height: 80%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+
+.gift-emoji {
+    font-size: 60px;
+}
+
+/* Новый стиль блока с ценой подарка - размещаем в нижней части */
+.gift-price {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 500;
+    background-color: rgba(0, 143, 255, 0.1);
+    color: var(--tg-theme-button-color);
+    padding: 6px 8px;
+    border-radius: 100px;
+    box-shadow: none;
+    width: fit-content;
+    gap: 2px;
+    margin: 0;
+    min-width: 40px;
+}
+
+.gift-price .diamond {
+    margin-left: 0;
+    color: var(--tg-theme-button-color);
+}
+
+.gift-price .crystal-icon {
+    width: 0.9em;
+    height: 0.9em;
+    position: relative;
+    top: 1px;
+    fill: var(--tg-theme-button-color);
+}
+
+.gift-price-value {
+    font-size: 16px;
+    color: var(--tg-theme-button-color);
+}
+
+.gift-name {
+    font-size: 14px;
+    text-align: center;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.gift-sell-button {
+    background-color: var(--tg-theme-button-color);
+    color: var(--tg-theme-button-text-color);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    width: 100%;
+}
+
+.gift-sell-button:active {
+    opacity: 0.8;
+}
+
+/* Стили для списка истории */
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+.history-item {
+    background-color: var(--tg-theme-secondary-bg-color);
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.history-date {
+    font-size: 12px;
+    color: var(--tg-theme-hint-color);
+    margin-bottom: 10px;
+}
+
+.history-bet {
+    font-size: 14px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.history-bet .diamond {
+    margin-left: 0;
+    display: inline-flex;
+    align-items: center;
+}
+
+.history-bet .crystal-icon {
+    width: 14px;
+    height: 14px;
+    vertical-align: middle;
+}
+
+.history-result {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.history-result.win {
+    color: var(--success-color, #4CAF50);
+}
+
+.history-result.lose {
+    color: var(--error-color, #F44336);
+}
+
+/* Стили для пустого сообщения */
+.empty-message {
+    text-align: center;
+    padding: 12px;
+    color: var(--tg-theme-hint-color);
+    font-size: 16px;
+    background-color: var(--tg-theme-secondary-bg-color);
+    border-radius: 15px;
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    min-height: 150px;
+}
+
+/* Стили для анимации обновления баланса */
+.balance-update-animation {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 30px);
+    opacity: 0;
+    color: var(--success-color, #4CAF50);
+    font-size: 24px;
+    font-weight: normal;
+    pointer-events: none;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.balance-update-animation.show {
+    transform: translate(-50%, -30px);
+    opacity: 1;
+}
+
+/* Модальное окно выигрыша */
+.win-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    box-sizing: border-box;
+}
+
+.win-modal.show {
+    display: flex;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.win-modal h2 {
+    margin-top: 0;
+    color: var(--tg-theme-text-color);
+    font-size: 26px;
+    text-align: center;
+    max-width: 340px;
+    width: 100%;
+    margin-bottom: 25px;
+    font-weight: 600;
+}
+
+.won-gift {
+    font-size: 72px;
+    margin: 30px 0;
+    animation: pop 0.5s ease;
+    width: 180px;
+    height: 180px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.win-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 340px;
+    margin-top: 20px;
+}
+
+.action-button {
+    background: rgba(var(--tg-theme-button-color-rgb, 93, 172, 239), 0.9);
+    color: var(--tg-theme-button-text-color);
+    border: none;
+    border-radius: 14px;
+    padding: 16px 24px;
+    font-size: 17px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.action-button:active {
+    opacity: 0.8;
+}
+
+.action-button[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    position: relative;
+}
+
+.action-button[disabled]::after {
+    content: "В разработке";
+    position: absolute;
+    top: -20px;
+    right: 5px;
+    font-size: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 10px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.action-button[disabled]:hover::after {
+    opacity: 1;
+}
+
+/* Стили для временного сообщения */
+.temporary-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 10px;
+    z-index: 2000;
+    text-align: center;
+    max-width: 90%;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.temporary-message.show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+@keyframes pop {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    70% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.buy-gems-button, .settings-button {
+    width: 100%;
+    padding: 16px 20px;
+    background-color: var(--tg-theme-button-color);
+    color: var(--tg-theme-button-text-color);
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.inventory-item {
+    position: relative;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: var(--tg-theme-secondary-bg-color);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.badges-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 15px;
+    padding: 20px;
+    background-color: var(--tg-theme-secondary-bg-color);
+    border-radius: 15px;
+    margin-bottom: 30px;
+}
+
+.badge-item {
+    position: relative;
+    width: 70px;
+    height: 70px;
+    background-color: var(--tg-theme-bg-color);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    transition: transform 0.3s ease;
+}
+
+.top-up-modal-content {
+    background: var(--tg-theme-secondary-bg-color);
+    border-radius: 20px;
+    padding: 25px 20px;
+    text-align: center;
+    margin: auto;
+    width: 90%;
+    max-width: 340px;
+    position: relative;
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Стили для списка подарков */
+.user-gifts-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 15px;
+    padding: 15px;
+}
+
+@media (max-width: 360px) {
+    .user-gifts-list {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Карточка подарка в профиле */
+.user-gifts-list .gift-item {
+    background-color: var(--tg-theme-secondary-bg-color);
+    border-radius: 15px;
+    padding: 12px;
+    width: 100%;
+    max-width: 120px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s, background-color 0.2s;
+    cursor: pointer;
+    position: relative;
+    aspect-ratio: 1 / 1.3;
+    margin: 0 auto;
+}
+
+/* Цена подарка в профиле */
+.user-gifts-list .gift-price {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 500;
+    background-color: rgba(0, 143, 255, 0.1);
+    color: var(--tg-theme-button-color);
+    padding: 6px 8px;
+    border-radius: 100px;
+    box-shadow: none;
+    width: fit-content;
+    gap: 2px;
+    margin: 0;
+    min-width: 40px;
+}
+
+.user-gifts-list .gift-price .diamond {
+    margin-left: 0;
+    color: var(--tg-theme-button-color);
+}
+
+.user-gifts-list .gift-price .crystal-icon {
+    width: 0.9em;
+    height: 0.9em;
+    position: relative;
+    top: 1px;
+    fill: var(--tg-theme-button-color);
+}
+
+.user-gifts-list .gift-price .gift-price-value {
+    font-size: 16px;
+    color: var(--tg-theme-button-color);
+}
+
+.gift-emoji {
+    font-size: 48px;
+    text-align: center;
+}
+
+/* Дополнительные стили для специальных типов подарков */
+.gift-limited {
+    border: 2px solid gold;
+}
+
+.gift-upgradable {
+    border: 2px solid #3b82f6;
+}
+
+/* Стили для плашек ограниченных и эксклюзивных подарков */
+.limited-label,
+.upgradable-label,
+.exclusive-label,
+.price-tier-1-label,
+.price-tier-2-label,
+.price-tier-3-label,
+.price-tier-4-label,
+.price-tier-5-label,
+.price-tier-1-exclusive-label,
+.price-tier-2-exclusive-label,
+.price-tier-3-exclusive-label,
+.price-tier-4-exclusive-label,
+.price-tier-5-exclusive-label {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50px;
+    height: 50px;
+    overflow: hidden;
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* Стили для ленточек limited */
+.limited-label:before,
+.price-tier-1-label:before,
+.price-tier-2-label:before,
+.price-tier-3-label:before,
+.price-tier-4-label:before,
+.price-tier-5-label:before {
+    content: "limited";
+    position: absolute;
+    top: 11px;
+    right: -31px;
+    width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #FF9800, #FF5722);
+    box-shadow: none;
+    color: white;
+    font-size: 8px;
+    line-height: 1;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    text-transform: lowercase;
+    text-align: center;
+    padding: 3px 0;
+    transform: rotate(45deg);
+}
+
+/* Стили для ленточек exclusive */
+.exclusive-label:before,
+.price-tier-1-exclusive-label:before,
+.price-tier-2-exclusive-label:before,
+.price-tier-3-exclusive-label:before,
+.price-tier-4-exclusive-label:before,
+.price-tier-5-exclusive-label:before {
+    content: "exclusive";
+    position: absolute;
+    top: 11px;
+    right: -31px;
+    width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #9C27B0, #6A1B9A);
+    box-shadow: none;
+    color: white;
+    font-size: 8px;
+    line-height: 1;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    text-transform: lowercase;
+    text-align: center;
+    padding: 3px 0;
+    transform: rotate(45deg);
+}
+
+/* Стили для ленточки upgradable */
+.upgradable-label:before {
+    content: "upgradable";
+    position: absolute;
+    top: 11px;
+    right: -31px;
+    width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #4CAF50, #2E7D32);
+    box-shadow: none;
+    color: white;
+    font-size: 8px;
+    line-height: 1;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    text-transform: lowercase;
+    text-align: center;
+    padding: 3px 0;
+    transform: rotate(45deg);
+}
+
+/* Стили для разных ценовых диапазонов подарков */
+.gift-price-tier-1 {
+    position: relative;
+    /* Без обводки для tier-1 */
+    border: none;
+    box-shadow: none;
+}
+
+.gift-price-tier-2 {
+    position: relative;
+    box-shadow: none;
+    background: 
+        linear-gradient(var(--tg-theme-secondary-bg-color), var(--tg-theme-secondary-bg-color)) padding-box,
+        linear-gradient(45deg, #4CAF50, #2E7D32) border-box;
+    border: 1px solid transparent;
+    border-radius: 15px;
+}
+
+.gift-price-tier-3 {
+    position: relative;
+    box-shadow: none;
+    background: 
+        linear-gradient(var(--tg-theme-secondary-bg-color), var(--tg-theme-secondary-bg-color)) padding-box,
+        linear-gradient(45deg, #03A9F4, #2196F3) border-box;
+    border: 1px solid transparent;
+    border-radius: 15px;
+}
+
+.gift-price-tier-4 {
+    position: relative;
+    box-shadow: none;
+    background: 
+        linear-gradient(var(--tg-theme-secondary-bg-color), var(--tg-theme-secondary-bg-color)) padding-box,
+        linear-gradient(45deg, #FF9800, #FF5722) border-box;
+    border: 1px solid transparent;
+    border-radius: 15px;
+}
+
+.gift-price-tier-5 {
+    position: relative;
+    box-shadow: none;
+    background: 
+        linear-gradient(var(--tg-theme-secondary-bg-color), var(--tg-theme-secondary-bg-color)) padding-box,
+        linear-gradient(45deg, #9C27B0, #6A1B9A) border-box;
+    border: 1px solid transparent;
+    border-radius: 15px;
+}
+
+/* Стили для миниатюр подарков */
+.gift-thumbnail {
+    max-width: 90%;
+    max-height: 90%;
+    width: auto;
+    height: auto;
+}
+
+/* Контейнер для опыта на странице профиля */
+.experience-container {
+    width: 100%;
+    padding: 0 15px;
+    margin-bottom: 15px;
+    margin-top: 10px;
+}
+

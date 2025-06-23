@@ -1,0 +1,15 @@
+http://giftgogame.com [301 Moved Permanently] Country[RUSSIAN FEDERATION][RU],
+ HTTPServer[nginx],
+ IP[109.172.90.72],
+ RedirectLocation[https://giftgogame.com/],
+ Title[301 Moved Permanently],
+ nginx
+https://giftgogame.com/ [200 OK] Country[RUSSIAN FEDERATION][RU],
+ HTML5, HTTPServer[nginx],
+ IP[109.172.90.72],
+ Script[module],
+ Strict-Transport-Security[max-age=63072000; includeSubDomains; preload],
+ UncommonHeaders[access-control-allow-origin,x-content-type-options],
+ X-Frame-Options[SAMEORIGIN],
+ X-XSS-Protection[1; mode=block],
+ nginx

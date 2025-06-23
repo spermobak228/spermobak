@@ -1,0 +1,440 @@
+/* Стили для страницы таблицы лидеров */
+
+/* Применяем темные значения для темной темы */
+@media (prefers-color-scheme: dark) {
+    /* Определения переменных перенесены в style.css */
+}
+
+.page-container {
+    padding: 0;
+    max-width: 757px;
+    width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+    overflow: visible;
+}
+
+.leaderboard-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 15px 0;
+    padding-bottom: 70px;
+    position: relative;
+}
+
+.leaderboard-header {
+    text-align: center;
+    margin-bottom: 15px;
+    width: calc(100% - 40px);
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.leaderboard-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: var(--tg-theme-text-color);
+}
+
+.leaderboard-subtitle {
+    font-size: 14px;
+    color: var(--tg-theme-hint-color);
+    margin: 0 0 10px; /* Синхронизировано до 10px */
+    line-height: 1.4;
+}
+
+/* Стили для анимации трофея */
+.trophy-animation {
+    display: flex;
+    justify-content: center;
+    margin: 0 auto 8px;
+}
+
+.trophy-animation tgs-player {
+    transform: scale(1);
+    width: 100px !important;
+    height: 100px !important;
+}
+
+.leaderboard-tabs {
+    display: flex;
+    width: calc(100% - 40px);
+    margin: 0 20px 15px 20px;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: var(--tg-theme-secondary-bg-color);
+    height: 46px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: none;
+    transition: all 0.3s ease;
+    left: 0;
+    right: 0;
+    padding: 5px;
+}
+
+.leaderboard-tabs.sticky {
+    position: fixed;
+    width: 100vw;
+    margin: 0;
+    border-radius: 0;
+    left: 0;
+    right: 0;
+    transform: translateX(0);
+    box-shadow: none; /* Гарантируем отсутствие тени в состоянии sticky */
+}
+
+.leaderboard-tabs:before {
+    content: '';
+    position: absolute;
+    height: calc(100% - 6px);
+    width: calc(33.33% - 6px);
+    left: 3px;
+    top: 3px;
+    background-color: var(--tg-theme-bg-color);
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+    z-index: 0;
+    box-sizing: border-box;
+}
+
+.leaderboard-tabs.games-selected:before {
+    transform: translateX(calc(100% + 6px));
+}
+
+.leaderboard-tabs.gifts-selected:before {
+    transform: translateX(calc(200% + 12px));
+}
+
+.leaderboard-tab {
+    flex: 1;
+    text-align: center;
+    padding: 0;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    z-index: 1;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s;
+    position: relative;
+    border-radius: 8px;
+}
+
+.leaderboard-tab.active {
+    color: var(--tg-theme-text-color);
+    background-color: transparent;
+}
+
+.leaderboard-tab:not(.active) {
+    opacity: 1;
+}
+
+.leaderboard-content {
+    width: 100%;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Общие стили для элементов списка */
+.leaderboard-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 20px;
+    position: relative;
+    gap: 10px;
+    background-color: var(--tg-theme-bg-color);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.leaderboard-item::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 66px;
+    right: 20px;
+    height: 0.5px;
+    background-color: var(--tg-theme-secondary-bg-color);
+}
+
+.leaderboard-item:hover {
+    transform: none; /* Убираем эффект при наведении */
+}
+
+.leaderboard-item.top-1 {
+    background-color: var(--tg-theme-bg-color); /* Используем стандартный фон */
+    border-bottom: none;
+}
+
+.leaderboard-item.top-2 {
+    background-color: var(--tg-theme-bg-color);
+    border-bottom: none;
+}
+
+.leaderboard-item.top-3 {
+    background-color: var(--tg-theme-bg-color);
+    border-bottom: none;
+}
+
+.leaderboard-position {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--tg-theme-button-color);
+    color: var(--tg-theme-button-text-color);
+    border-radius: 50%;
+    font-weight: bold;
+    margin-right: 10px; /* Синхронизировано до 10px */
+    font-size: 14px;
+}
+
+.top-1 .leaderboard-position {
+    background-color: gold;
+    color: #333;
+}
+
+.top-2 .leaderboard-position {
+    background-color: silver;
+    color: #333;
+}
+
+.top-3 .leaderboard-position {
+    background-color: #cd7f32; /* Бронза */
+    color: white;
+}
+
+/* Общие стили для аватара */
+.user-avatar {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: var(--tg-theme-hint-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.user-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    background-color: var(--tg-theme-bg-color, #1c1c1c);
+}
+
+.user-avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--tg-theme-bg-color, #ffffff);
+    background-color: var(--tg-theme-button-color, #2481cc);
+    border-radius: 50%;
+}
+
+/* Общие стили для имени пользователя */
+.user-name {
+    flex: 1;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--tg-theme-text-color);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    min-width: 0; /* Важно для работы text-overflow */
+}
+
+.user-name span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    display: block;
+}
+
+/* Общие стили для статистики */
+.user-stats {
+    font-size: 13px;
+    color: var(--tg-theme-hint-color);
+    margin-top: 1px;
+    font-weight: 400;
+}
+
+/* Общие стили для позиции */
+.user-position {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--tg-theme-text-color);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-width: 40px;
+    margin-left: auto;
+    padding-left: 20px;
+    text-align: right;
+}
+
+/* Стили для tgs-player в позициях пользователей */
+.user-position tgs-player {
+    width: 30px !important;
+    height: 30px !important;
+    position: relative;
+    transform: scale(1);
+    margin: 0 0 0 auto; /* Выравниваем по правому краю */
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Выравниваем по правому краю */
+}
+
+/* Стили для текущего пользователя */
+.current-user {
+    background-color: var(--tg-theme-bg-color) !important;
+    border-bottom: none !important;
+}
+
+.current-user-badge {
+    display: none;
+}
+
+.error-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    width: 100%;
+    color: #e74c3c;
+    font-size: 16px;
+    text-align: center;
+    padding: 0 10px; /* Синхронизировано до 10px */
+}
+
+.empty-message {
+    text-align: center;
+    color: var(--tg-theme-hint-color, #999);
+    padding: 20px;
+    font-size: 16px;
+}
+
+/* Стили для фиксированного блока с позицией пользователя */
+.user-position-fixed {
+    position: fixed;
+    bottom: 72px; /* Увеличиваем высоту над навигацией */
+    left: 0;
+    right: 0;
+    width: 100%;
+    background: rgba(var(--tg-theme-bg-color-rgb), var(--user-position-background-opacity));
+    backdrop-filter: blur(var(--glass-blur-amount));
+    -webkit-backdrop-filter: blur(var(--glass-blur-amount));
+    z-index: 100;
+    transition: transform 0.3s ease-in-out;
+    max-width: 757px;
+    margin: 0 auto;
+    border-bottom: none;
+    border-radius: 0;
+}
+
+.user-position-fixed.hidden {
+    transform: translateY(100%);
+    opacity: 0;
+}
+
+.user-position-fixed .leaderboard-item {
+    padding: 8px 20px;
+    background: transparent;
+    border: none;
+    margin-bottom: 0;
+}
+
+/* Убираем разделитель в плашке */
+.user-position-fixed .leaderboard-item::after {
+    display: none;
+}
+
+/* Убираем метку "Это вы" */
+.current-user-badge {
+    display: none;
+}
+
+/* Стили для сообщения об обновлении таблицы лидеров */
+.leaderboard-updating-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 20px;
+    min-height: 300px;
+}
+
+.trophy-animation {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.updating-text {
+    font-size: 16px;
+    color: var(--tg-theme-text-color, #222);
+    max-width: 300px;
+    line-height: 1.5;
+}
+
+/* Стиль для сообщения об ошибке */
+.error-message {
+    text-align: center;
+    padding: 20px;
+    color: #ff3b30;
+    font-size: 16px;
+}
+
+/* Стиль для индикатора времени последнего обновления */
+.last-updated-info {
+    font-size: 0.75rem;
+    color: var(--tg-theme-hint-color, #999);
+    text-align: center;
+    margin: 0 0 10px;
+    padding: 0 15px;
+    line-height: 1.2;
+}
+
+/* Добавляю стили для кнопки обновления */
+/* Стиль для кнопки обновления данных */
+.refresh-button {
+    background: none;
+    border: none;
+    color: var(--tg-theme-link-color, #2481cc);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0 5px;
+    vertical-align: middle;
+    transition: transform 0.2s;
+}
+
+.refresh-button:hover {
+    transform: rotate(30deg);
+} 

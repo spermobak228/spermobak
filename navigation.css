@@ -1,0 +1,168 @@
+/* Стили для нижней навигации */
+:root {
+    /* Значения по умолчанию, которые будут переопределены в шаблоне */
+    --tg-active-icon-filter: invert(43%) sepia(97%) saturate(1752%) hue-rotate(196deg) brightness(98%) contrast(96%);
+}
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(var(--tg-theme-bg-color-rgb), var(--nav-background-opacity));
+    backdrop-filter: blur(var(--glass-blur-amount));
+    -webkit-backdrop-filter: blur(var(--glass-blur-amount));
+    display: flex;
+    justify-content: space-around;
+    padding: 12px 0 8px;
+    box-shadow: none;
+    z-index: 999;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    will-change: transform;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-perspective: 1000;
+    perspective: 1000;
+    transition: none;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5px 0;
+    width: 20%;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    pointer-events: auto;
+}
+
+.nav-icon {
+    margin-bottom: 5px;
+    transition: transform 0.3s ease;
+    height: 30px;
+    width: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Стили для SVG иконок навигации */
+.nav-icon-svg {
+    width: 26px;
+    height: 26px;
+    transition: fill 0.3s ease, transform 0.3s ease;
+    /* Базовый цвет для неактивных иконок */
+    fill: var(--tg-theme-text-color, #000000);
+    opacity: 0.7;
+    /* Обеспечиваем точное выравнивание */
+    display: block;
+    vertical-align: middle;
+}
+
+/* Коррекция выравнивания для отдельных иконок */
+.leaderboard-icon .nav-icon-svg {
+    /* Иконка лидерборда слегка смещена вниз для выравнивания */
+    transform: translateY(1px);
+}
+
+.tasks-icon .nav-icon-svg {
+    /* Иконка заданий может потребовать небольшой коррекции */
+    transform: translateY(0.5px);
+}
+
+.events-icon .nav-icon-svg {
+    /* Иконка событий может быть слегка скорректирована */
+    transform: translateY(-0.5px);
+}
+
+/* Тематизация для темной темы */
+html[data-theme="dark"] .nav-icon-svg {
+    fill: var(--tg-theme-text-color, #ffffff);
+    opacity: 0.7;
+}
+
+/* Активные иконки используют цвет кнопок Telegram */
+.nav-item.active .nav-icon-svg {
+    fill: var(--tg-theme-button-color);
+    opacity: 1;
+}
+
+/* Стили для текста навигации */
+.nav-text {
+    font-size: 12px;
+    font-weight: 400;
+    text-align: center;
+    transition: color 0.3s ease;
+    color: var(--tg-theme-text-color, #000000);
+    opacity: 0.7;
+}
+
+.nav-item.active {
+    color: var(--tg-theme-button-color);
+}
+
+.nav-item.active .nav-text {
+    color: var(--tg-theme-button-color);
+    opacity: 1;
+}
+
+.nav-item.active .nav-icon {
+    transform: scale(1.1);
+}
+
+.nav-item:hover .nav-icon {
+    transform: scale(1.1);
+}
+
+/* Учитываем коррекцию позиционирования в активном состоянии */
+.nav-item.active .leaderboard-icon .nav-icon-svg,
+.nav-item:hover .leaderboard-icon .nav-icon-svg {
+    transform: translateY(1px) scale(1.1);
+}
+
+.nav-item.active .tasks-icon .nav-icon-svg,
+.nav-item:hover .tasks-icon .nav-icon-svg {
+    transform: translateY(0.5px) scale(1.1);
+}
+
+.nav-item.active .events-icon .nav-icon-svg,
+.nav-item:hover .events-icon .nav-icon-svg {
+    transform: translateY(-0.5px) scale(1.1);
+}
+
+.nav-item.disabled {
+    pointer-events: none;
+}
+
+/* Индикатор уведомления в меню */
+.notification-dot {
+    position: relative;
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #ff3b30;
+    margin-left: 3px;
+    vertical-align: 1px;
+    animation: notification-pulse 1.5s infinite;
+}
+
+@keyframes notification-pulse {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.7);
+    }
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 3px rgba(255, 59, 48, 0);
+    }
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(255, 59, 48, 0);
+    }
+} 

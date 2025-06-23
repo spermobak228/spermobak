@@ -1,0 +1,513 @@
+:root {
+    --tg-theme-divider-color: rgba(0, 0, 0, 0.1);
+    --tg-theme-subtle-bg-color: rgba(0, 0, 0, 0.05);
+    --tg-theme-light-shadow-color: rgba(0, 0, 0, 0.05);
+    --tg-theme-medium-shadow-color: rgba(0, 0, 0, 0.15);
+    --tg-theme-dark-shadow-color: rgba(0, 0, 0, 0.2);
+    --tg-theme-modal-backdrop-color: rgba(0,0,0,0.7);
+    --tg-theme-timer-bg-color: rgba(0,0,0,0.5);
+    --tg-theme-timer-text-color: #fff;
+}
+
+/* Стили для страницы заданий */
+
+/* Стили для контейнера страницы */
+.page-container {
+    padding: 0;
+    max-width: 757px;
+    width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+    overflow: visible;
+}
+
+/* Индикатор загрузки для карточек заданий */
+.task-loading-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60px;
+    color: var(--tg-theme-hint-color);
+    font-size: 14px;
+    position: relative;
+    padding: 10px;
+    text-align: center;
+    animation: fadeInOut 1.5s ease-in-out infinite;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+}
+
+/* Стили для ошибок заданий */
+.task-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    text-align: center;
+    background-color: var(--tg-theme-secondary-bg-color, #f8f8f8);
+    border-radius: 12px;
+    margin: 10px 0;
+    min-height: 80px;
+}
+
+.task-error .error-icon {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.task-error .error-message {
+    color: var(--tg-theme-text-color);
+    font-size: 14px;
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+.task-error .retry-button {
+    background-color: var(--tg-theme-button-color, #2481cc);
+    color: var(--tg-theme-button-text-color, #ffffff);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.task-error .retry-button:hover {
+    opacity: 0.8;
+}
+
+.task-error .retry-button:active {
+    opacity: 0.6;
+}
+
+/* Стили для горизонтальной панели фильтров */
+.tasks-filter-scroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding: 12px 0;
+    position: relative;
+    background-color: transparent;
+}
+
+.tasks-filter-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.tasks-filter-container {
+    display: flex;
+    padding: 0 20px;
+    min-width: max-content;
+    gap: 10px;
+}
+
+.tasks-filter-item {
+    padding: 8px 18px;
+    border-radius: 16px;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    color: var(--tg-theme-text-color);
+    background-color: var(--tg-theme-secondary-bg-color, #f0f0f0);
+    border: none;
+    opacity: 0.8;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.tasks-filter-item.active {
+    background-color: var(--tg-theme-button-color);
+    color: var(--tg-theme-button-text-color);
+    border-color: var(--tg-theme-button-color);
+    opacity: 1;
+}
+
+/* Контейнер заданий */
+.tasks-container {
+    padding: 0 12px;
+    margin-bottom: 80px; /* для нижней навигации */
+}
+
+/* Заголовок секции заданий */
+.tasks-header {
+    color: var(--tg-theme-text-color);
+    font-size: 18px;
+    font-weight: 600;
+    margin: 24px 0 12px;
+    padding-left: 4px;
+}
+
+/* Контейнер для списка заданий (будет переопределен в task-card.css) */
+.tasks-list {
+    margin-bottom: 20px;
+}
+
+/* Сообщение об отсутствии заданий */
+.empty-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--tg-theme-hint-color);
+    font-size: 16px;
+    padding: 24px;
+    background-color: var(--tg-theme-secondary-bg-color);
+    border-radius: 16px;
+    margin: 16px 0;
+}
+
+/* Модальное окно с информацией о задании */
+.task-detail-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--tg-theme-modal-backdrop-color);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.task-detail-modal.show {
+    display: flex;
+    opacity: 1;
+}
+
+.task-detail-content {
+    width: 90%;
+    max-width: 400px;
+    max-height: 80vh;
+    background-color: var(--tg-theme-bg-color);
+    border-radius: 15px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transform: none;
+    transition: opacity 0.3s ease;
+}
+
+.task-detail-modal.show .task-detail-content {
+    transform: none;
+}
+
+.task-detail-header {
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--tg-theme-divider-color);
+    position: relative;
+}
+
+.task-detail-icon {
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+.task-detail-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--tg-theme-text-color);
+    flex: 1;
+}
+
+.task-detail-close {
+    font-size: 20px;
+    color: var(--tg-theme-hint-color);
+    cursor: pointer;
+    padding: 5px;
+}
+
+.task-detail-close:active {
+    transform: none;
+}
+
+.task-detail-body {
+    padding: 15px;
+    overflow-y: auto;
+    max-height: calc(80vh - 140px);
+}
+
+.task-detail-description {
+    font-size: 15px;
+    color: var(--tg-theme-text-color);
+    line-height: 1.4;
+    margin-bottom: 20px;
+}
+
+.task-detail-progress-container {
+    margin-bottom: 20px;
+}
+
+.task-detail-progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: var(--tg-theme-hint-color);
+    margin-bottom: 5px;
+}
+
+.task-detail-progress {
+    height: 8px;
+    background-color: var(--tg-theme-divider-color);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.task-detail-progress-bar {
+    height: 100%;
+    background-color: var(--tg-theme-button-color);
+    width: 0%;
+    transition: width 0.5s ease;
+}
+
+.task-detail-time-container {
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: var(--tg-theme-subtle-bg-color);
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.task-detail-time-label {
+    font-size: 14px;
+    color: var(--tg-theme-hint-color);
+}
+
+.task-detail-time {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--tg-theme-text-color);
+}
+
+.task-detail-reward-container {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: var(--tg-theme-subtle-bg-color);
+    border-radius: 10px;
+}
+
+.task-detail-reward-label {
+    font-size: 14px;
+    color: var(--tg-theme-hint-color);
+    margin-bottom: 10px;
+}
+
+.task-detail-reward {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Стили для шагов в деталях задания */
+.task-detail-steps {
+    margin-bottom: 20px;
+}
+
+.task-detail-steps-label {
+    font-size: 14px;
+    color: var(--tg-theme-hint-color);
+    margin-bottom: 10px;
+}
+
+.task-detail-steps-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.task-detail-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px;
+    background-color: var(--tg-theme-subtle-bg-color);
+    border-radius: 10px;
+}
+
+.task-detail-step-number {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: var(--tg-theme-button-color);
+    color: var(--tg-theme-button-text-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.task-detail-step-text {
+    font-size: 14px;
+    color: var(--tg-theme-text-color);
+    line-height: 1.4;
+}
+
+.task-detail-step.completed .task-detail-step-number {
+    background-color: #4CAF50;
+}
+
+.task-detail-step.completed .task-detail-step-text {
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+
+.task-detail-footer {
+    padding: 15px;
+    border-top: 1px solid var(--tg-theme-divider-color);
+    display: flex;
+    justify-content: center;
+}
+
+.task-detail-button,
+.task-complete-button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background-color: var(--tg-theme-button-color);
+    color: var(--tg-theme-button-text-color);
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.task-detail-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Модальное окно с успешным выполнением задания */
+.task-complete-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--tg-theme-modal-backdrop-color);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.task-complete-modal.show {
+    display: flex;
+    opacity: 1;
+}
+
+.task-complete-content {
+    width: 90%;
+    max-width: 320px;
+    background-color: var(--tg-theme-secondary-bg-color);
+    border-radius: 20px;
+    padding: 25px 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transform: none;
+    transition: opacity 0.3s ease;
+    box-shadow: none;
+    position: relative;
+}
+
+.task-complete-modal.show .task-complete-content {
+    transform: none;
+}
+
+/* Стиль для кнопки закрытия (крестик) */
+.task-complete-modal .close-button {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 32px;
+    height: 32px;
+    background: rgba(var(--tg-theme-text-color-rgb), 0.1);
+    border: none;
+    border-radius: 50%;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--tg-theme-text-color);
+    cursor: pointer;
+    transition: background-color 0.2s;
+    z-index: 10;
+    line-height: 0;
+    padding: 0;
+}
+
+.task-complete-modal .close-button:active {
+    transform: none;
+}
+
+.task-complete-header {
+    padding: 10px 0 15px 0;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    border-bottom: none;
+}
+
+.task-complete-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--tg-theme-text-color);
+}
+
+.task-complete-body {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.task-complete-animation {
+    width: 150px;
+    height: 150px;
+    margin: 15px auto;
+}
+
+.task-complete-message {
+    display: none;
+}
+
+/* Стили для индикатора загрузки в кнопках заданий */
+.task-button .loading-spinner {
+    display: block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid #ffffff;
+    border-radius: 50%;
+    animation: task-button-spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+.task-button.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@keyframes task-button-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+} 

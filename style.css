@@ -1,0 +1,2570 @@
+/* Стили для прелоадера */
+.preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--tg-theme-bg-color, #ffffff);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease;
+}
+
+.dice-loader {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo-animation {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+}
+
+.dice {
+    font-size: 48px;
+    animation: dice-bounce 1.5s infinite;
+}
+
+.loader-text {
+    margin-top: 20px;
+    font-size: 18px;
+    color: var(--tg-theme-text-color, #222222);
+    font-weight: 500;
+}
+
+.preloader.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+@keyframes dice-bounce {
+    0%, 100% { 
+        transform: rotate(0deg) scale(1); 
+    }
+    25% { 
+        transform: rotate(90deg) scale(1.1); 
+    }
+    50% { 
+        transform: rotate(180deg) scale(1); 
+    }
+    75% { 
+        transform: rotate(270deg) scale(1.05); 
+    }
+}
+
+@keyframes logo-shine {
+    0% {
+        background-position: -100% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+:root {
+    /* Переменные для цветовой схемы (будут заменены JavaScript) */
+    --tg-theme-bg-color: #18222d;
+    --tg-theme-text-color: #ffffff;
+    --tg-theme-hint-color: #7d7d7d;
+    --tg-theme-link-color: #5eacef;
+    --tg-theme-button-color: #5eacef;
+    --tg-theme-button-text-color: #ffffff;
+    --tg-theme-secondary-bg-color: #232e3c;
+    
+    /* RGB версии переменных для прозрачности */
+    --tg-theme-bg-color-rgb: 255, 255, 255;
+    --tg-theme-hint-color-rgb: 0, 0, 0;
+    
+    /* Переменные для стеклянного эффекта (блюр) */
+    --glass-blur-amount: 10px;
+    
+    /* Отдельные переменные для прозрачности разных элементов */
+    --nav-background-opacity: 0.8;
+    --user-position-background-opacity: 0.5;
+    
+    /* Дополнительные переменные для совместимости */
+    --highlight-color: var(--tg-theme-button-color);
+    --shadow-color: transparent;
+    --overlay-color: rgba(0, 0, 0, 0.3);
+    --success-color: #4CAF50;
+    --error-color: #F44336;
+    
+    /* Переменные для полосы прокрутки */
+    --scrollbar-width: 2px;
+    --scrollbar-track-color: transparent;
+    --scrollbar-thumb-color: var(--tg-theme-button-color);
+}
+
+/* Стили для полосы прокрутки - Webkit (Chrome, Safari, новые версии Edge) */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    background-color: transparent;
+}
+
+/* Применяем темные значения для темной темы */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --tg-theme-bg-color-rgb: 33, 33, 33;
+        --tg-theme-hint-color-rgb: 170, 170, 170;
+    }
+}
+
+::-webkit-scrollbar-track {
+    background-color: transparent;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(var(--tg-theme-hint-color-rgb), 0.2);
+    border-radius: 10px;
+    transition: background-color 0.3s;
+}
+
+/* Скрываем полосу прокрутки по умолчанию */
+html {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+}
+
+/* Показываем полосу прокрутки только при активном скролле */
+html.scrolling ::-webkit-scrollbar-thumb {
+    opacity: 1;
+}
+
+html.scrolling {
+    scrollbar-color: var(--tg-theme-button-color) transparent;
+}
+
+/* Стили для экрана загрузки */
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--tg-theme-bg-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
+    pointer-events: auto;
+}
+
+.loading-screen.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.loading-content {
+    text-align: center;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid var(--tg-theme-button-color);
+    border-top: 3px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 15px;
+}
+
+.loading-text {
+    color: var(--tg-theme-text-color);
+    font-size: 16px;
+    font-weight: 500;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
+    -khtml-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+        Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: var(--tg-theme-bg-color);
+    color: var(--tg-theme-text-color);
+    overflow-x: hidden;
+    overflow-y: auto;
+    font-size: 13px;
+    font-weight: 400; /* Устанавливаем более тонкий шрифт */
+    -webkit-font-smoothing: antialiased; /* Сглаживание шрифта для лучшего отображения */
+    -moz-osx-font-smoothing: grayscale; /* Сглаживание шрифта для Firefox */
+    letter-spacing: 0.2px; /* Небольшое увеличение расстояния между буквами */
+    touch-action: auto;
+    pointer-events: auto;
+    position: relative; /* Добавляем для лучшей поддержки фиксированных элементов */
+    min-height: 100vh; /* Гарантируем, что тело занимает хотя бы всю высоту окна */
+    width: 100%;
+    overscroll-behavior-y: none; /* Предотвращаем эффект "отскока" при скролле */
+}
+
+.container {
+    max-width: 757px;
+    margin: 0 auto;
+    padding: 20px;
+    padding-bottom: 80px; /* Увеличиваем отступ для нижней навигации */
+    pointer-events: auto;
+}
+
+/* Добавляем стили для отображения баланса */
+.balance-display {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    font-size: 18px;
+    font-weight: 500; /* Снижаем с bold до 500 */
+    color: var(--tg-theme-text-color);
+    flex-shrink: 0;
+    gap: 2px; /* Уменьшаем gap в два раза */
+}
+
+.balance-display .diamond {
+    margin-left: 0; /* Убираем margin, так как используем gap */
+    font-size: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Общий стиль для контейнера иконки */
+.diamond {
+    font-size: 1em;
+    margin-left: 4px; /* Явный отступ для всех контейнеров с иконкой */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Стили для SVG-иконки кристалла */
+.crystal-icon {
+    width: 1em; /* Относительный размер, соответствующий размеру шрифта */
+    height: 1em;
+    fill: currentColor;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: baseline; /* Выравниваем по базовой линии */
+    position: relative;
+    font-size: inherit; /* Наследуем размер шрифта от родителя */
+}
+
+/* Специфичные размеры для иконки в разных контекстах */
+.balance-display .crystal-icon {
+    width: 16px;
+    height: 16px;
+}
+
+.bet-option .crystal-icon {
+    width: 0.9em; /* Чуть меньше текста для лучшего выравнивания */
+    height: 0.9em;
+}
+
+.lottery-item-price .crystal-icon {
+    width: 0.9em;
+    height: 0.9em;
+    position: relative;
+    top: 1px; /* Настройка вертикального положения для выравнивания с числом */
+}
+
+/* Стиль для иконки кристалла в тексте (вне кнопок или элементов управления) */
+.crystal-icon.in-text {
+    fill: var(--tg-theme-text-color, black);
+    width: 14px;
+    height: 14px;
+    vertical-align: middle;
+    position: relative;
+    top: -1px; /* Корректировка для лучшего выравнивания */
+}
+
+/* Старые стили gift-price удалены - теперь используется единый стиль */
+
+/* Стили для иконки в ценовых тегах */
+.cost-tag {
+    background-color: #ffffff;
+    color: var(--tg-theme-button-color);
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-size: 12px;
+    margin-left: 8px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 2px; /* Уменьшаем gap в два раза */
+}
+
+.cost-tag .diamond {
+    margin-left: 0;
+}
+
+/* Стили для иконки кристалла в уведомлениях */
+.giftgo-notification {
+    display: flex;
+    align-items: center;
+    gap: 2px; /* Уменьшаем gap в два раза */
+}
+
+.giftgo-notification .crystal-icon {
+    width: 16px;
+    height: 16px;
+    fill: var(--tg-theme-text-color, #fff);
+    margin-left: 0; /* Убираем margin, используем gap */
+    vertical-align: middle;
+}
+
+/* Новый стиль для выбора ставки в виде полоски с ползунком */
+.bet-options {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+    position: relative;
+    background-color: var(--tg-theme-secondary-bg-color);
+    border-radius: 12px;
+    padding: 5px;
+    box-shadow: none;
+    height: 46px;
+    overflow: hidden;
+}
+
+.bet-options.disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+.bet-option.disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+/* Стили для кнопок ставок во время прокрутки */
+.bet-options.disabled .bet-option {
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+.bet-options.disabled:before {
+    opacity: 1;
+}
+
+.bet-option {
+    flex: 1;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 500;
+    cursor: pointer;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s;
+    position: relative;
+    pointer-events: auto;
+    height: 100%;
+    gap: 2px; /* Уменьшаем gap в два раза */
+    border-radius: 8px;
+}
+
+.bet-options:before {
+    content: '';
+    position: absolute;
+    height: calc(100% - 6px);
+    width: calc(25% - 6px);
+    left: 3px;
+    top: 3px;
+    background-color: var(--tg-theme-bg-color);
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+    z-index: 0;
+    box-sizing: border-box;
+}
+
+.bet-options.medium-selected:before {
+    transform: translateX(calc(100% + 6px));
+}
+
+.bet-options.high-selected:before {
+    transform: translateX(calc(200% + 10px));
+}
+
+.bet-options.ultra-selected:before {
+    transform: translateX(calc(300% + 18px));
+}
+
+.bet-option.selected {
+    color: var(--tg-theme-text-color);
+}
+
+/* Стили для SVG-иконки кристалла */
+.crystal-icon {
+    width: 1em;
+    height: 1em;
+    fill: currentColor;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: baseline; /* Выравниваем по базовой линии */
+    position: relative;
+    font-size: inherit; /* Наследуем размер шрифта от родителя */
+}
+
+/* Стили для окна лотереи */
+.lottery-container {
+    position: relative;
+    margin: 15px 0;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: none;
+    max-width: 757px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.lottery-window {
+    position: relative;
+    height: 196px;
+    overflow: hidden;
+    border-radius: 15px;
+    background-color: var(--tg-theme-secondary-bg-color);
+    padding: 3px 0;
+}
+
+/* Возвращаем затемнение по бокам */
+.lottery-window:before, 
+.lottery-window:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 55px;
+    height: 100%;
+    z-index: 5;
+    pointer-events: none;
+}
+
+.lottery-window:before {
+    left: 0;
+    background: linear-gradient(
+        to right, 
+        var(--lottery-barrel-shadow-color-05, rgba(0, 0, 0, 0.5)), 
+        var(--lottery-barrel-shadow-color-03, rgba(0, 0, 0, 0.3)) 30%, 
+        var(--lottery-barrel-shadow-color-01, rgba(0, 0, 0, 0.1)) 70%, 
+        transparent
+    );
+}
+
+.lottery-window:after {
+    right: 0;
+    background: linear-gradient(
+        to left, 
+        var(--lottery-barrel-shadow-color-05, rgba(0, 0, 0, 0.5)), 
+        var(--lottery-barrel-shadow-color-03, rgba(0, 0, 0, 0.3)) 30%, 
+        var(--lottery-barrel-shadow-color-01, rgba(0, 0, 0, 0.1)) 70%, 
+        transparent
+    );
+}
+
+.lottery-items {
+    display: flex;
+    position: absolute;
+    left: 0;
+    top: 3px;
+    height: calc(100% - 6px);
+    align-items: center;
+    /* Базовый transition установлен в JavaScript динамически */
+}
+
+/* Медленная анимация прокрутки для режима ожидания */
+.lottery-items.idle-animation {
+    animation: lottery-idle-scroll 60s linear infinite;
+}
+
+@keyframes lottery-idle-scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-1560px); /* Ширина 10 элементов для плавной прокрутки */
+    }
+}
+
+.lottery-item {
+    width: 150px;
+    height: 186px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 3px;
+    background-color: var(--tg-theme-bg-color);
+    border-radius: 12px;
+    box-shadow: none;
+    transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+    pointer-events: auto !important;
+}
+
+/* Улучшенная анимация блеска */
+.lottery-item:before {
+    display: none; /* Полностью убираем отблеск */
+}
+
+/* Стиль для выигрышного предмета - убираем свечение */
+.lottery-item.highlight {
+    background-color: var(--tg-theme-bg-color);
+    transform: scale(1); /* Убираем увеличение */
+    border-color: transparent; /* Убираем обводку */
+    z-index: 5;
+}
+
+.lottery-item.winning-item.highlight:before {
+    display: none; /* Полностью убираем отблеск для выигрышного элемента */
+}
+
+@keyframes winner-pulse {
+    0% {
+        box-shadow: none;
+    }
+    50% {
+        box-shadow: none;
+    }
+    100% {
+        box-shadow: none;
+    }
+}
+
+@keyframes winner-shine {
+    0% {
+        left: -100%;
+    }
+    20% {
+        left: 100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+@keyframes shine {
+    0% {
+        left: -100%;
+    }
+    20% {
+        left: 100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+.lottery-item-icon {
+    font-size: 65px;
+    margin-bottom: 10px;
+    animation: pulse 1.5s infinite;
+    position: relative;
+    width: 95px;
+    height: 95px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Увеличиваем анимацию для выигрышного предмета */
+.lottery-item.highlight .lottery-item-icon {
+    animation: winner-icon-pulse 1s infinite;
+    font-size: 65px; /* Возвращаем к обычному размеру */
+}
+
+@keyframes winner-icon-pulse {
+    0% {
+        transform: scale(1);
+        text-shadow: 0 0 5px rgba(var(--tg-theme-button-color-rgb), 0.3);
+    }
+    50% {
+        transform: scale(1.1);
+        text-shadow: 0 0 10px rgba(var(--tg-theme-button-color-rgb), 0.5);
+    }
+    100% {
+        transform: scale(1);
+        text-shadow: 0 0 5px rgba(var(--tg-theme-button-color-rgb), 0.3);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Общий унифицированный стиль для отображения цены подарков */
+.gift-price-tag {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 500;
+    background-color: rgba(0, 143, 255, 0.1);
+    color: var(--tg-theme-button-color);
+    padding: 6px 8px;
+    border-radius: 100px;
+    box-shadow: none;
+    margin: 5px auto 0;
+    width: fit-content;
+    gap: 2px;
+}
+
+.gift-price-tag .diamond {
+    margin-left: 0;
+    color: var(--tg-theme-button-color);
+}
+
+.gift-price-tag .crystal-icon {
+    width: 0.9em;
+    height: 0.9em;
+    position: relative;
+    top: 1px;
+    fill: var(--tg-theme-button-color);
+}
+
+/* Эталонный стиль лотереи остается без изменений */
+.lottery-item-price {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 500; /* Устанавливаем единый weight */
+    background-color: rgba(0, 143, 255, 0.1); /* Изменяем цвет на #008FFF с прозрачностью 30% */
+    color: var(--tg-theme-button-color); /* Используем цвет кнопки из темы */
+    padding: 6px 8px;
+    border-radius: 100px;
+    box-shadow: none;
+    margin: 5px auto 0;
+    width: fit-content;
+    gap: 2px; /* Уменьшаем gap в два раза */
+}
+
+.lottery-item-price .diamond {
+    margin-left: 0;
+    color: var(--tg-theme-button-color); /* Используем цвет кнопки из темы */
+}
+
+.lottery-item-price .crystal-icon {
+    width: 0.9em;
+    height: 0.9em;
+    position: relative;
+    top: 1px; /* Настройка вертикального положения для выравнивания с числом */
+    fill: var(--tg-theme-button-color); /* Используем цвет кнопки из темы */
+}
+
+/* Унифицируем стиль для блока возможных выигрышей */
+.gift-price {
+    /* Применяем стили из gift-price-tag */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 500;
+    background-color: rgba(0, 143, 255, 0.1);
+    color: var(--tg-theme-button-color);
+    padding: 6px 8px;
+    border-radius: 100px;
+    box-shadow: none;
+    margin: 5px auto 0;
+    width: fit-content;
+    gap: 2px;
+}
+
+.gift-price .diamond {
+    margin-left: 0;
+    color: var(--tg-theme-button-color);
+}
+
+.gift-price .crystal-icon {
+    width: 0.9em;
+    height: 0.9em;
+    position: relative;
+    top: 1px;
+    fill: var(--tg-theme-button-color);
+}
+
+.gift-price-value {
+    font-size: 16px;
+}
+
+.indicator {
+    position: absolute;
+    width: 1px;
+    height: 100%;
+    background-color: var(--tg-theme-button-color);
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    box-shadow: none;
+}
+
+/* Удаляем стрелки и анимацию пульсации */
+.indicator:before,
+.indicator:after {
+    display: none;
+}
+
+/* Стили для нижнего инфо-блока */
+.info-section {
+    margin-top: 15px;
+    position: relative;
+}
+
+/* Переключатель демо-режима - новое расположение */
+.demo-mode {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 70px;
+    height: 58px;
+    background-color: var(--tg-theme-secondary-bg-color); /* Возвращаем фоновый цвет блока */
+    border: none; /* Оставляем без обводки */
+    border-radius: 12px;
+    box-shadow: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    pointer-events: auto !important;
+}
+
+.demo-mode span {
+    color: var(--tg-theme-text-color);
+    font-size: 14px;
+    font-weight: normal;
+    text-transform: uppercase;
+}
+
+/* Стиль для переключателя в стиле iPhone */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 46px;
+    height: 22px;
+    pointer-events: auto !important;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--tg-theme-hint-color);
+    transition: .4s;
+    border-radius: 22px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background-color: var(--tg-theme-button-text-color);
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--tg-theme-button-color);
+}
+
+input:checked + .slider:before {
+    transform: translateX(24px);
+}
+
+/* Кнопка прокрутки - изменяем ширину, чтобы оставить место для DEMO */
+.spin-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: calc(100% - 80px);
+    padding: 15px;
+    background-color: var(--tg-theme-button-color);
+    color: var(--tg-theme-button-text-color);
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+    position: relative;
+    overflow: hidden;
+    box-shadow: none;
+    height: 56px;
+    pointer-events: auto !important;
+}
+
+.spin-button:hover {
+    transform: scale(1.02);
+}
+
+.spin-button:active {
+    transform: scale(0.98);
+}
+
+.free-tag {
+    background-color: #ffffff;
+    color: var(--tg-theme-button-color);
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-size: 12px;
+    margin-left: 8px;
+    font-weight: 500;
+}
+
+/* Добавляем отступы для иконки в тегах цены */
+.cost-tag .crystal-icon {
+    margin-left: 1px;
+    position: relative;
+    top: -1px;
+}
+
+/* Стили для иконки кристалла в других компонентах */
+.coins-icon {
+    display: flex;
+    align-items: center;
+}
+
+.coins-icon .crystal-icon {
+    width: 16px;
+    height: 16px;
+    margin-left: 0;
+}
+
+.history-bet {
+    display: flex;
+    align-items: center;
+    gap: 2px; /* Уменьшаем gap в два раза */
+}
+
+.history-bet .crystal-icon {
+    width: 14px;
+    height: 14px;
+    margin-left: 0;
+}
+
+/* Секция с возможными выигрышами */
+.chances-section {
+    margin-top: 15px;
+}
+
+.chances-section h3 {
+    margin-bottom: 5px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: normal;
+    color: var(--tg-theme-text-color);
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.chances-section h3:after {
+    content: none;
+}
+
+.gifts-container {
+    display: flex;
+    overflow-x: auto;
+    padding: 5px 0;
+    gap: 8px;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    scroll-snap-type: x proximity;
+    transition: scroll-left 2s cubic-bezier(0.2, 0.0, 0.1, 1.0);
+    pointer-events: auto !important;
+}
+
+.gifts-container::-webkit-scrollbar {
+    height: 6px;
+}
+
+.gifts-container::-webkit-scrollbar-track {
+    background: var(--tg-theme-secondary-bg-color);
+    border-radius: 10px;
+}
+
+.gifts-container::-webkit-scrollbar-thumb {
+    background: var(--tg-theme-button-color);
+    border-radius: 10px;
+}
+
+.gift-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--tg-theme-secondary-bg-color);
+    border-radius: 10px;
+    padding: 15px;
+    min-width: 90px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: none;
+    pointer-events: auto !important;
+    position: relative;
+    scroll-snap-align: start;
+    overflow: hidden;
+}
+
+.gift-item:hover {
+    transform: translateY(-5px);
+    box-shadow: none;
+}
+
+.gift-icon {
+    font-size: 35px;
+    margin-bottom: 8px;
+}
+
+.gift-chance {
+    font-size: 12px;
+    color: var(--tg-theme-hint-color);
+}
+
+/* Модальное окно выигрыша - улучшенное оформление */
+.win-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(var(--tg-theme-bg-color-rgb), 0.7);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.win-modal.show {
+    display: flex;
+    opacity: 1;
+    pointer-events: auto;
+    overflow-y: auto;
+    animation: modal-appear 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* Добавляем анимацию появления модального окна */
+@keyframes modal-appear {
+    0% {
+        opacity: 0;
+        transform: scale(0.7);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 340px;
+    margin: auto;
+    padding-bottom: 20px;
+    transform-origin: center center;
+}
+
+/* Стили специально для модального окна пополнения баланса */
+#topUpModal {
+    justify-content: flex-start;
+    overflow-y: auto;
+}
+
+#topUpModal .modal-content {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+/* Стили для модального окна выигрыша подарка */
+#winModal, #demoWinModal, #giftModal {
+    justify-content: center;
+    background: rgba(var(--tg-theme-bg-color-rgb), 0.80); /* Увеличиваем непрозрачность фона */
+}
+
+#winModal .win-actions, #demoWinModal .win-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px; /* Уменьшаем отступы между кнопками с 15px до 8px */
+    max-width: 340px;
+    width: 100%;
+    margin-top: 8px; /* Уменьшаем верхний отступ с 10px до 8px */
+}
+
+.win-modal h2 {
+    margin-bottom: 25px;
+    text-align: center;
+    color: var(--tg-theme-text-color);
+    font-size: 26px;
+    max-width: 340px;
+    width: 100%;
+    font-weight: 600;
+}
+
+.won-gift {
+    margin: 30px auto;
+    width: 180px;
+    height: 180px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    position: relative;
+    z-index: 1;
+    box-sizing: border-box;
+}
+
+.gift-emoji {
+    font-size: 90px;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Стили для tgs-player в окне подарка */
+tgs-player {
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+    margin: 0 auto !important;
+    transform: none !important;
+}
+
+.gift-name {
+    font-size: 20px;
+    color: var(--tg-theme-text-color);
+    margin-bottom: 40px;
+    font-weight: 500;
+    text-align: center;
+    max-width: 340px;
+    width: 100%;
+}
+
+.win-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Две колонки для кнопок */
+    gap: 8px; /* Уменьшаем отступы между кнопками с 15px до 8px */
+    max-width: 340px;
+    width: 100%;
+    margin-top: 8px; /* Уменьшаем верхний отступ с 10px до 8px */
+}
+
+.action-button {
+    background: rgba(var(--tg-theme-button-color-rgb, 93, 172, 239), 0.9);
+    color: var(--tg-theme-button-text-color);
+    border: none;
+    border-radius: 14px;
+    padding: 16px 24px;
+    font-size: 17px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    pointer-events: auto;
+    height: calc(16px + 16px + 17px); /* Фиксированная высота для всех кнопок (padding-top + padding-bottom + font-size) */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+/* Новые стили для кнопок Получить и В профиль */
+#receiveGift, #keepGift {
+    background: var(--tg-theme-secondary-bg-color);
+    color: var(--tg-theme-text-color);
+}
+
+#receiveGift:active, #keepGift:active {
+    background: rgba(var(--tg-theme-hint-color-rgb), 0.1);
+}
+
+.action-button:active {
+    opacity: 0.8;
+}
+
+/* Стили для кнопки "Продать" в модальных окнах */
+#sellGift, #sellModalGift {
+    height: calc(2 * (16px + 16px + 17px)); /* Увеличиваем высоту в 2 раза от стандартной */
+    grid-column: 1 / -1; /* Растягиваем на все колонки */
+    font-size: 20px; /* Увеличиваем размер шрифта */
+    font-weight: 600; /* Делаем шрифт немного жирнее */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px; /* Увеличиваем gap для лучшей читаемости */
+    margin-top: 0; /* Убираем верхний отступ */
+    background: rgba(var(--tg-theme-button-color-rgb), 0.85);
+}
+
+/* Стили для контента внутри кнопки продажи с дополнительным текстом */
+.sell-button-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.sell-button-main {
+    font-size: 20px; 
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+.sell-button-sub {
+    font-size: 14px;
+    font-weight: 400;
+    opacity: 0.85;
+    margin-top: 3px;
+}
+
+/* Стиль для кнопки закрытия (крестик) */
+.close-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 45px;
+    height: 45px;
+    background: rgba(var(--tg-theme-text-color-rgb), 0.15);
+    border: none;
+    border-radius: 50%;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--tg-theme-text-color);
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+    z-index: 10;
+    line-height: 0;
+    padding: 0;
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+}
+
+/* Стили для сообщений в модальном окне */
+.gift-unavailable-message {
+    color: #ff5252;
+    font-size: 16px;
+    margin: 15px 0;
+    text-align: center;
+    font-weight: bold;
+    max-width: 340px;
+    width: 100%;
+}
+
+.gift-exclusive-message, .exclusive-gift-message {
+    color: var(--tg-theme-text-color, #000000);
+    font-size: 16px;
+    margin: 15px 0 25px;
+    text-align: center;
+    font-weight: bold;
+    max-width: 340px;
+    width: 100%;
+}
+
+/* Стили для анимации обновления баланса */
+.balance-update {
+    position: fixed;
+    top: 0;
+    right: 0;
+    font-size: 18px;
+    font-weight: normal;
+    z-index: 1100;
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: none;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    text-align: right;
+    display: flex;
+    align-items: center;
+    gap: 2px; /* Уменьшаем gap в два раза */
+}
+
+/* Цвета для положительных и отрицательных значений */
+.balance-update.positive-value {
+    color: #00481c; /* Более насыщенный зелёный для светлой темы */
+    font-weight: 500; /* Делаем текст жирнее */
+}
+
+.balance-update.negative-value {
+    color: #e53935; /* Более насыщенный красный для светлой темы */
+    font-weight: 500; /* Делаем текст жирнее */
+}
+
+/* Адаптация для тёмной темы */
+@media (prefers-color-scheme: dark) {
+    .balance-update.positive-value {
+        color: #00de73; /* Яркий зелёный для тёмной темы */
+    }
+    
+    .balance-update.negative-value {
+        color: #ff5252; /* Яркий красный для тёмной темы */
+    }
+}
+
+.balance-update .diamond {
+    margin-left: 0; /* Убираем margin, используем gap */
+}
+
+/* Стили для информации о пользователе */
+.user-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    width: 100%;
+    background-color: var(--tg-theme-secondary-bg-color);
+    border-radius: 12px;
+    padding: 10px 15px;
+    box-shadow: none;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 10px;
+    background-color: var(--tg-theme-secondary-bg-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.user-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.user-avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--tg-theme-text-color);
+    background-color: var(--tg-theme-button-color);
+}
+
+.user-details {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.user-name {
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--tg-theme-text-color);
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 180px;
+}
+
+.user-stats {
+    font-size: 12px;
+    color: var(--tg-theme-hint-color);
+}
+
+/* Стили для отключенных элементов */
+.bet-options.disabled,
+.bet-option.disabled,
+.spin-button.disabled,
+.demo-mode.disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+/* Анимация подсветки кнопки профиля */
+.profile-highlight {
+    animation: profile-pulse 0.5s ease-out;
+    position: relative;
+    z-index: 10;
+}
+
+@keyframes profile-pulse {
+    0% {
+        box-shadow: none;
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: none;
+        transform: scale(1.12);
+    }
+    100% {
+        box-shadow: none;
+        transform: scale(1);
+    }
+}
+
+/* Стиль для анимируемого подарка */
+.animated-gift {
+    animation: gift-rotate 0.8s ease-in;
+}
+
+@keyframes gift-rotate {
+    0% {
+        transform: rotate(0deg) scale(1);
+    }
+    40% {
+        transform: rotate(15deg) scale(1.1);
+    }
+    70% {
+        transform: rotate(-10deg) scale(0.6);
+    }
+    100% {
+        transform: rotate(0deg) scale(0.2);
+    }
+}
+
+lottie-player {
+    width: 100%;
+    height: 100%;
+}
+
+#giftModalGift {
+    width: 150px;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px auto;
+}
+
+/* Стили для модального окна пополнения баланса */
+.top-up-animation {
+    margin: 10px auto 15px;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#topUpModal h2 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+#topUpModal p {
+    color: var(--tg-theme-text-color);
+    opacity: 0.8;
+    max-width: 280px;
+    margin: 0 auto 15px;
+    font-size: 16px;
+    text-align: center;
+}
+
+.terms-text {
+    font-size: 12px;
+    color: var(--tg-theme-hint-color);
+    margin: 15px 0 5px;
+    line-height: 1.4;
+    max-width: 300px;
+    text-align: center;
+    padding-bottom: 10px;
+}
+
+.terms-text a {
+    color: var(--tg-theme-link-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.top-up-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 10px 0;
+    max-width: 340px;
+    width: 100%;
+}
+
+.top-up-option {
+    background: rgba(var(--tg-theme-button-color-rgb), 0.85);
+    color: var(--tg-theme-button-text-color);
+    border-radius: 14px;
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    width: 100%;
+    max-width: 340px;
+    margin: 0 auto;
+}
+
+.top-up-option:active {
+    transform: scale(0.98);
+    background-color: var(--tg-theme-button-color);
+}
+
+.top-up-option:hover {
+    background-color: var(--tg-theme-button-color);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.stars-option {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 500;
+    gap: 6px;
+}
+
+.stars-icon {
+    font-size: 18px;
+}
+
+.coins-value {
+    font-weight: 600;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.coins-value .crystal-icon {
+    width: 18px;
+    height: 18px;
+}
+
+/* Анимация для опций пополнения */
+@keyframes option-pulse {
+    0% {
+        box-shadow: none;
+    }
+    70% {
+        box-shadow: none;
+    }
+    100% {
+        box-shadow: none;
+    }
+}
+
+.top-up-option:hover {
+    animation: option-pulse 1.5s infinite;
+}
+
+/* Стиль для маленького индикатора загрузки внутри опции пополнения */
+.loading-spinner-small {
+    width: 24px;
+    height: 24px;
+    border: 3px solid rgba(var(--tg-theme-button-text-color-rgb), 0.3);
+    border-top: 3px solid var(--tg-theme-button-text-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+.top-up-option.loading {
+    justify-content: center;
+    align-items: center;
+    height: 48px;
+    pointer-events: none;
+}
+
+/* Стили для специальных типов подарков */
+.gift-limited {
+    position: relative;
+}
+
+.gift-upgradable {
+    position: relative;
+}
+
+/* Новые классы для обводки на основе цены */
+.gift-price-tier-1 {
+    position: relative;
+    /* Без обводки для tier-1 */
+    border: none;
+    box-shadow: none;
+}
+
+.gift-price-tier-2 {
+    position: relative;
+    box-shadow: none;
+    background: 
+        linear-gradient(var(--tg-theme-secondary-bg-color), var(--tg-theme-secondary-bg-color)) padding-box,
+        linear-gradient(45deg, #4CAF50, #2E7D32) border-box;
+    border: 1px solid transparent;
+    border-radius: 10px;
+}
+
+.gift-price-tier-3 {
+    position: relative;
+    box-shadow: none;
+    background: 
+        linear-gradient(var(--tg-theme-secondary-bg-color), var(--tg-theme-secondary-bg-color)) padding-box,
+        linear-gradient(45deg, #03A9F4, #2196F3) border-box;
+    border: 1px solid transparent;
+    border-radius: 10px;
+}
+
+.gift-price-tier-4 {
+    position: relative;
+    box-shadow: none;
+    background: 
+        linear-gradient(var(--tg-theme-secondary-bg-color), var(--tg-theme-secondary-bg-color)) padding-box,
+        linear-gradient(45deg, #FF9800, #FF5722) border-box;
+    border: 1px solid transparent;
+    border-radius: 10px;
+}
+
+.gift-price-tier-5 {
+    position: relative;
+    box-shadow: none;
+    background: 
+        linear-gradient(var(--tg-theme-secondary-bg-color), var(--tg-theme-secondary-bg-color)) padding-box,
+        linear-gradient(45deg, #9C27B0, #6A1B9A) border-box;
+    border: 1px solid transparent;
+    border-radius: 10px;
+}
+
+.gift-thumbnail {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Индикаторы для разных типов подарков */
+.gift-indicator {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    font-size: 14px;
+    background: #fff;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    display: none; /* Скрываем все индикаторы */
+    align-items: center;
+    justify-content: center;
+    box-shadow: none;
+    z-index: 1;
+}
+
+.limited-indicator {
+    background: linear-gradient(135deg, #FF5722, #FF9800);
+}
+
+.upgrade-indicator {
+    background: linear-gradient(135deg, #2196F3, #03A9F4);
+}
+
+.premium-indicator {
+    background: linear-gradient(135deg, #9E9E9E, #BDBDBD);
+}
+
+/* Стили для миниатюр и индикаторов в барабане лотереи */
+.lottery-item-icon img.gift-thumbnail {
+    max-width: 100%;
+    max-height: 100%;
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+}
+
+.lottery-item.highlight .lottery-item-icon img.gift-thumbnail {
+    transform: scale(1.05);
+}
+
+/* Стили для выигрышного элемента в барабане */
+.lottery-item.winning {
+    position: relative;
+    z-index: 2;
+}
+
+/* Уменьшенная миниатюра для профиля */
+.gift-thumbnail-small {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.lottery-item-icon .gift-indicator {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    font-size: 14px;
+    background: #fff;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: none; /* Скрываем все индикаторы */
+    align-items: center;
+    justify-content: center;
+    box-shadow: none;
+    z-index: 1;
+}
+
+.lottery-item-icon .limited-indicator {
+    background: linear-gradient(135deg, #FF5722, #FF9800);
+}
+
+.lottery-item-icon .upgrade-indicator {
+    background: linear-gradient(135deg, #2196F3, #03A9F4);
+}
+
+.lottery-item-icon .premium-indicator {
+    background: linear-gradient(135deg, #9E9E9E, #BDBDBD);
+}
+
+/* Позиционирование индикатора */
+.lottery-item-icon {
+    position: relative;
+}
+
+/* Стили для диалога подтверждения */
+.confirmation-dialog {
+    max-width: 300px;
+    text-align: center;
+    padding: 20px;
+}
+
+.confirmation-message {
+    margin: 15px 0;
+    font-size: 16px;
+    line-height: 1.4;
+    white-space: pre-line;
+}
+
+.confirmation-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.confirmation-actions .action-button {
+    flex: 1;
+    margin: 0 5px;
+}
+
+.confirmation-actions .confirm-button {
+    background-color: #4CAF50;
+}
+
+.confirmation-actions .cancel-button {
+    background-color: #f44336;
+}
+
+/* Стиль для модальных окон подарков */
+.win-modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Стиль для контейнера анимации в модальном окне */
+#modalGift {
+    width: 150px;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Дополнительный стиль для контейнеров подарков */
+.won-gift, #modalGift {
+    overflow: visible;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 150px;
+    height: 150px;
+    margin: 20px auto;
+}
+
+/* Плашка limited в правом верхнем углу */
+.limited-label {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50px;
+    height: 50px;
+    overflow: hidden;
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* Цветовые схемы для ленточек на основе ценовых диапазонов */
+.price-tier-1-label:before {
+    content: "limited";
+    position: absolute;
+    top: 11px;
+    right: -31px;
+    width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #108250, #4CAF50);
+    box-shadow: none;
+    color: white;
+    font-size: 8px;
+    line-height: 1;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    text-transform: lowercase;
+    text-align: center;
+    padding: 3px 0;
+    transform: rotate(45deg);
+}
+
+.price-tier-2-label:before {
+    content: "limited";
+    position: absolute;
+    top: 11px;
+    right: -31px;
+    width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #4CAF50, #2E7D32);
+    box-shadow: none;
+    color: white;
+    font-size: 8px;
+    line-height: 1;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    text-transform: lowercase;
+    text-align: center;
+    padding: 3px 0;
+    transform: rotate(45deg);
+}
+
+.price-tier-3-label:before {
+    content: "limited";
+    position: absolute;
+    top: 11px;
+    right: -31px;
+    width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #2196F3, #03A9F4);
+    box-shadow: none;
+    color: white;
+    font-size: 8px;
+    line-height: 1;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    text-transform: lowercase;
+    text-align: center;
+    padding: 3px 0;
+    transform: rotate(45deg);
+}
+
+.price-tier-4-label:before {
+    content: "limited";
+    position: absolute;
+    top: 11px;
+    right: -31px;
+    width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #FF5722, #FF9800);
+    box-shadow: none;
+    color: white;
+    font-size: 8px;
+    line-height: 1;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    text-transform: lowercase;
+    text-align: center;
+    padding: 3px 0;
+    transform: rotate(45deg);
+}
+
+.price-tier-5-label:before {
+    content: "limited";
+    position: absolute;
+    top: 11px;
+    right: -31px;
+    width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #9C27B0, #6A1B9A);
+    box-shadow: none;
+    color: white;
+    font-size: 8px;
+    line-height: 1;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    text-transform: lowercase;
+    text-align: center;
+    padding: 3px 0;
+    transform: rotate(45deg);
+}
+
+/* Старый стиль для обратной совместимости */
+.limited-label:before {
+    content: "limited";
+    position: absolute;
+    top: 11px;
+    right: -31px;
+    width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #e67e22, #f39c12);
+    box-shadow: none;
+    color: white;
+    font-size: 8px;
+    line-height: 1;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    text-transform: lowercase;
+    text-align: center;
+    padding: 3px 0;
+    transform: rotate(45deg);
+}
+
+/* Стиль для эксклюзивных подарков */
+.exclusive-label:before {
+    content: "exclusive";
+    position: absolute;
+    top: 11px;
+    right: -31px;
+    width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #e67e22, #f39c12);
+    box-shadow: none;
+    color: white;
+    font-size: 8px;
+    line-height: 1;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    text-transform: lowercase;
+    text-align: center;
+    padding: 3px 0;
+    transform: rotate(45deg);
+}
+
+/* Стиль для кнопки пропуска анимации */
+.skip-button {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 70px;
+    height: 58px;
+    background-color: var(--tg-theme-button-color);
+    border: none;
+    border-radius: 12px;
+    box-shadow: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    pointer-events: auto !important;
+}
+
+.skip-button span {
+    color: var(--tg-theme-button-text-color);
+    font-size: 14px;
+    font-weight: normal;
+    text-transform: uppercase;
+}
+
+.skip-button:active {
+    transform: scale(0.95);
+}
+
+/* Стили для иконки информации (i) для эксклюзивных подарков */
+.gift-info-icon {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: bold;
+    font-style: normal;
+    z-index: 10;
+    box-sizing: border-box;
+    border: 1px solid transparent;
+    background: 
+        linear-gradient(var(--tg-theme-secondary-bg-color), var(--tg-theme-secondary-bg-color)) padding-box,
+        linear-gradient(45deg, #9C27B0, #6A1B9A) border-box;
+    color: #9C27B0;
+}
+
+.gift-price-tier-2 .gift-info-icon {
+    background: 
+        linear-gradient(var(--tg-theme-secondary-bg-color), var(--tg-theme-secondary-bg-color)) padding-box,
+        linear-gradient(45deg, #4CAF50, #2E7D32) border-box;
+    color: #4CAF50;
+}
+
+.gift-price-tier-3 .gift-info-icon {
+    background: 
+        linear-gradient(var(--tg-theme-secondary-bg-color), var(--tg-theme-secondary-bg-color)) padding-box,
+        linear-gradient(45deg, #03A9F4, #2196F3) border-box;
+    color: #03A9F4;
+}
+
+.gift-price-tier-4 .gift-info-icon {
+    background: 
+        linear-gradient(var(--tg-theme-secondary-bg-color), var(--tg-theme-secondary-bg-color)) padding-box,
+        linear-gradient(45deg, #FF9800, #FF5722) border-box;
+    color: #FF9800;
+}
+
+.gift-price-tier-5 .gift-info-icon {
+    background: 
+        linear-gradient(var(--tg-theme-secondary-bg-color), var(--tg-theme-secondary-bg-color)) padding-box,
+        linear-gradient(45deg, #9C27B0, #6A1B9A) border-box;
+    color: #9C27B0;
+}
+
+.gift-info-icon:hover {
+    transform: scale(1.1);
+}
+
+/* Цветовые схемы для ленточек exclusive с разными ценами */
+.price-tier-1-exclusive-label:before {
+    content: "exclusive";
+    position: absolute;
+    top: 11px;
+    right: -31px;
+    width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #108250, #4CAF50);
+    box-shadow: none;
+    color: white;
+    font-size: 8px;
+    line-height: 1;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    text-transform: lowercase;
+    text-align: center;
+    padding: 3px 0;
+    transform: rotate(45deg);
+}
+
+.price-tier-2-exclusive-label:before {
+    content: "exclusive";
+    position: absolute;
+    top: 11px;
+    right: -31px;
+    width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #4CAF50, #2E7D32);
+    box-shadow: none;
+    color: white;
+    font-size: 8px;
+    line-height: 1;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    text-transform: lowercase;
+    text-align: center;
+    padding: 3px 0;
+    transform: rotate(45deg);
+}
+
+.price-tier-3-exclusive-label:before {
+    content: "exclusive";
+    position: absolute;
+    top: 11px;
+    right: -31px;
+    width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #2196F3, #03A9F4);
+    box-shadow: none;
+    color: white;
+    font-size: 8px;
+    line-height: 1;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    text-transform: lowercase;
+    text-align: center;
+    padding: 3px 0;
+    transform: rotate(45deg);
+}
+
+.price-tier-4-exclusive-label:before {
+    content: "exclusive";
+    position: absolute;
+    top: 11px;
+    right: -31px;
+    width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #FF5722, #FF9800);
+    box-shadow: none;
+    color: white;
+    font-size: 8px;
+    line-height: 1;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    text-transform: lowercase;
+    text-align: center;
+    padding: 3px 0;
+    transform: rotate(45deg);
+}
+
+.price-tier-5-exclusive-label:before {
+    content: "exclusive";
+    position: absolute;
+    top: 11px;
+    right: -31px;
+    width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #9C27B0, #6A1B9A);
+    box-shadow: none;
+    color: white;
+    font-size: 8px;
+    line-height: 1;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    text-transform: lowercase;
+    text-align: center;
+    padding: 3px 0;
+    transform: rotate(45deg);
+}
+
+/* Стили для шкалы прогресса опыта */
+.exp-progress-container {
+    width: 100%;
+    height: 8px;
+    background-color: var(--tg-theme-secondary-bg-color);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.exp-progress-container.header {
+    height: 4px;
+    margin-top: 0; /* Убираем верхний отступ */
+    margin-bottom: 0; /* Убираем нижний отступ */
+    width: 90px; /* Ширина шкалы прогресса */
+    background-color: var(--tg-theme-bg-color);
+    position: absolute; /* Абсолютное позиционирование */
+    top: 50%; /* Центрирование по вертикали */
+    transform: translateY(-50%); /* Центрирование по вертикали */
+    z-index: 1; /* Ниже текста */
+}
+
+.exp-progress-bar {
+    height: 100%;
+    background-color: var(--tg-theme-button-color);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.exp-level-info {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: var(--tg-theme-hint-color);
+}
+
+.exp-level-info.header {
+    justify-content: flex-start;
+    font-size: 10px;
+    margin-top: 2px;
+    display: flex;
+    align-items: baseline; /* Выравнивание по базовой линии текста */
+    position: absolute; /* Абсолютное позиционирование */
+    left: 0; /* Привязка к левому краю */
+    top: 0; /* Привязка к верхнему краю */
+    width: 100%; /* Занимаем всю ширину контейнера */
+    z-index: 2; /* Поверх других элементов */
+}
+
+.exp-level-info.header .exp-level-text {
+    margin-right: 0; /* Убираем отступ справа */
+    min-width: 40px; /* Минимальная ширина для текста уровня */
+    text-align: left; /* Выравнивание текста по левому краю */
+}
+
+.exp-progress-text {
+    font-weight: 400;
+    text-align: right; /* Выравнивание текста по правому краю */
+}
+
+.exp-level-text {
+    font-weight: 500;
+    text-align: left; /* Выравнивание текста по левому краю */
+}
+
+/* Контейнер для опыта на странице профиля */
+.experience-container {
+    width: 100%;
+    padding: 0 15px;
+    margin-bottom: 15px;
+}
+
+/* Стиль для контейнера опыта на главной странице */
+.user-exp-container {
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    position: relative; /* Добавляем позиционирование */
+    height: 16px; /* Задаем фиксированную высоту */
+}
+
+/* Стили для balance-display на главной странице */
+.user-info .balance-display {
+    display: flex;
+    align-items: center; /* Улучшаем выравнивание */
+    gap: 2px; /* Уменьшаем gap в два раза */
+}
+
+.user-info .balance-display .diamond {
+    margin-left: 0; /* Убираем margin, так как используем gap */
+    display: flex;
+    align-items: center;
+}
+
+.user-info .balance-display .crystal-icon {
+    width: 18px; /* Немного увеличиваем иконку в верхнем блоке */
+    height: 18px;
+    vertical-align: middle;
+}
+
+/* Выравнивание кристаллов по размеру шрифта в разных контекстах */
+.bet-option span {
+    display: flex;
+    align-items: center;
+}
+
+/* Улучшаем выравнивание в кнопке продажи */
+#sellGift, #sellModalGift {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px; /* Уменьшаем gap в два раза */
+}
+
+/* Отключаем margin у иконки в кнопке продажи */
+#sellGift .crystal-icon, #sellModalGift .crystal-icon {
+    margin-left: 0; 
+}
+
+/* Отключаем отступы в diamond внутри bet-option, чтобы использовать gap */
+.bet-option .diamond {
+    margin-left: 0;
+}
+
+/* Стили для анимации обновления баланса */
+.balance-update.animate {
+    opacity: 1;
+    animation: balance-fade 1s forwards;
+}
+
+.balance-update.animate-up {
+    opacity: 1;
+    animation: balance-fade-up 1s forwards;
+}
+
+@keyframes balance-fade {
+    0% {
+        transform: translate(0, 0);
+        opacity: 0;
+    }
+    10% {
+        transform: translate(0, 2.5px);
+        opacity: 1;
+    }
+    70% {
+        transform: translate(0, 17.5px);
+        opacity: 0.5;
+    }
+    100% {
+        transform: translate(0, 25px);
+        opacity: 0;
+    }
+}
+
+@keyframes balance-fade-up {
+    0% {
+        transform: translate(0, 0);
+        opacity: 0;
+    }
+    10% {
+        transform: translate(0, -2.5px);
+        opacity: 1;
+    }
+    70% {
+        transform: translate(0, -17.5px);
+        opacity: 0.5;
+    }
+    100% {
+        transform: translate(0, -25px);
+        opacity: 0;
+    }
+}
+
+/* Нижняя навигация */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(var(--tg-theme-bg-color-rgb), var(--nav-background-opacity));
+    backdrop-filter: blur(var(--glass-blur-amount));
+    -webkit-backdrop-filter: blur(var(--glass-blur-amount));
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    box-shadow: none;
+    z-index: 999;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    will-change: transform;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-perspective: 1000;
+    perspective: 1000;
+    transition: none;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5px 0;
+    width: 33%;
+    cursor: pointer;
+    transition: color 0.3s;
+    pointer-events: auto;
+}
+
+.nav-icon {
+    font-size: 22px;
+    margin-bottom: 3px;
+    transition: transform 0.3s;
+}
+
+.nav-text {
+    font-size: 11px;
+    font-weight: 400;
+}
+
+.nav-item.active {
+    color: var(--tg-theme-button-color);
+}
+
+.nav-item.active .nav-icon {
+    transform: scale(1.1);
+}
+
+.nav-item:hover .nav-icon {
+    transform: scale(1.1);
+}
+
+.nav-item.disabled {
+    pointer-events: none;
+}
+
+/* Индикатор уведомления в меню */
+.notification-dot {
+    position: relative;
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #ff3b30;
+    margin-left: 3px;
+    vertical-align: 1px;
+    animation: notification-pulse 1.5s infinite;
+}
+
+@keyframes notification-pulse {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.7);
+    }
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 3px rgba(255, 59, 48, 0);
+    }
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(255, 59, 48, 0);
+    }
+}
+
+/* Адаптация модального окна для мобильных устройств */
+@media (max-height: 700px) {
+    .top-up-animation {
+        margin: 5px auto 10px;
+        width: 100px;
+        height: 100px;
+    }
+    
+    #topUpModal h2 {
+        font-size: 22px;
+        margin-top: 5px;
+    }
+    
+    #topUpModal p {
+        margin-bottom: 10px;
+        font-size: 14px;
+    }
+    
+    .top-up-option {
+        padding: 10px 15px;
+    }
+    
+    .terms-text {
+        margin-top: 10px;
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 340px) {
+    .modal-content {
+        padding: 0 5px;
+    }
+    
+    .top-up-options {
+        width: 95%;
+    }
+}
+
+/* Стили для кнопок в модальном окне предпросмотра подарка */
+#receiveModalGift, #shareModalGift, #sendGift {
+    background: var(--tg-theme-secondary-bg-color);
+    color: var(--tg-theme-text-color);
+}
+
+#receiveModalGift:active, #shareModalGift:active, #sendGift:active {
+    background: rgba(var(--tg-theme-hint-color-rgb), 0.1);
+}
+
+/* Стили для анимации появления кнопок выбора получателя */
+.send-options-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(0);
+    transition: max-height 0.4s cubic-bezier(0.215, 0.61, 0.355, 1), 
+                opacity 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+    z-index: 2;
+}
+
+.send-options-container.show {
+    max-height: 150px;
+    opacity: 1;
+}
+
+/* Создаем специальный контейнер для кнопки Отправить, чтобы сохранять его место при скрытии */
+.send-button-container {
+    position: relative;
+    grid-column: 1 / -1;
+    height: calc(16px + 16px + 17px); /* Высота как у кнопки */
+}
+
+#sendGift {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+#sendGift.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Размещаем контейнер с опциями отправки поверх контейнера кнопки */
+.send-button-container .send-options-container {
+    top: 0;
+}
+
+/* Стили для кнопок в опциях отправки */
+.send-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+}
+
+.action-button:active {
+    opacity: 0.8;
+}
+
+/* Стили для контейнера вопроса */
+.question-container {
+    width: 100%;
+    max-width: 340px;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.question-text {
+    font-size: 16px;
+    color: var(--tg-theme-text-color);
+    transition: opacity 0.3s ease;
+}
+
+/* Стили для win-actions и отступы между элементами */
+.win-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Две колонки для кнопок */
+    gap: 8px; /* Отступы между кнопками 8px */
+    max-width: 340px;
+    width: 100%;
+    margin-top: 0; /* Убираем верхний отступ, так как он теперь в контейнере вопроса */
+}
+
+/* Специальный стиль для цен в блоке возможных выигрышей */
+.gifts-container .gift-item .gift-price {
+    /* Уменьшенные размеры для компактных карточек */
+    font-size: 12px;
+    font-weight: 500;
+    background-color: rgba(0, 143, 255, 0.1);
+    color: var(--tg-theme-button-color);
+    padding: 4px 6px;
+    border-radius: 100px;
+    box-shadow: none;
+    margin: 3px auto 0;
+    width: fit-content;
+    gap: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Позиционирование внизу карточки */
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.gifts-container .gift-item .gift-price .diamond {
+    margin-left: 0;
+    color: var(--tg-theme-button-color);
+}
+
+.gifts-container .gift-item .gift-price .crystal-icon {
+    width: 0.8em;
+    height: 0.8em;
+    position: relative;
+    top: 0.5px;
+    fill: var(--tg-theme-button-color);
+}
+
+.gifts-container .gift-item .gift-price-value {
+    font-size: 12px;
+    color: var(--tg-theme-button-color);
+}
+
+/* Обеспечиваем правильную высоту для карточек подарков в блоке выигрышей */
+.gifts-container .gift-item {
+    position: relative;
+    padding-bottom: 35px; /* Добавляем отступ снизу для размещения цены */
+}

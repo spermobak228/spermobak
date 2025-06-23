@@ -1,0 +1,5 @@
+/api                  (Status: 301) [Size: 162] [--> https://giftgogame.com/api/]
+/dev                  (Status: 200) [Size: 32159]
+/health               (Status: 200) [Size: 64]
+/profile              (Status: 200) [Size: 19941]
+/tasks                (Status: 200) [Size: 23178]

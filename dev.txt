@@ -1,0 +1,1820 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <title>[РАЗРАБОТКА] <span data-i18n="app.title">Телеграм Лотерея</span></title>
+
+    <!-- Добавляем мета-теги для предотвращения кэширования в dev-режиме -->
+
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
+
+    <link rel="stylesheet" href="/dev/static/css/navigation.css?v=6076">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="/dev/static/css/style.css?v=7916">
+    <style>
+        * {
+            -webkit-touch-callout: none !important;
+            -webkit-user-select: none !important;
+            -khtml-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+            -webkit-tap-highlight-color: transparent !important;
+        }
+
+        html, body {
+            overscroll-behavior: none;
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
+            touch-action: auto;
+        }
+
+        input, textarea {
+            -webkit-user-select: text !important;
+            -khtml-user-select: text !important;
+            -moz-user-select: text !important;
+            -ms-user-select: text !important;
+            user-select: text !important;
+        }
+    </style>
+    <!-- Используем локальную библиотеку для поддержки .tgs анимаций -->
+    <script src="/dev/static/js/lib/tgs-player.js"></script>
+
+    <!-- Глобальные настройки приложения -->
+    <script>
+        // Передаем режим разработки в JavaScript
+        const isDevMode = JSON.parse('true');
+
+        // Демо-данные для тестирования интерфейса (до загрузки данных с сервера)
+        const demoGifts = {
+            "teddy_bear": {
+                "type": "teddy_bear",
+                "emoji": "🧸",
+                "star_count": 15,  // Вместо value используем star_count
+                "bet_types": ["low", "medium"],
+                "animation_path": "/dev/static/animations/1f9f8_regular.tgs",  // Используем animation_path
+                "thumbnail_path": "/dev/static/thumbnails/1f9f8_regular.webp", // Используем thumbnail_path
+                "gift_type": "regular",  // Тип подарка
+                // Для обратной совместимости добавляем старые поля
+                "value": 15,
+                "animation": "/dev/static/animations/1f9f8_regular.tgs"
+            },
+            "gift_box": {
+                "type": "gift_box",
+                "emoji": "🎁",
+                "star_count": 25,
+                "bet_types": ["low", "medium", "high"],
+                "animation_path": "/dev/static/animations/1f381_regular.tgs",
+                "thumbnail_path": "/dev/static/thumbnails/1f381_regular.webp",
+                "gift_type": "regular",
+                // Для обратной совместимости
+                "value": 25,
+                "animation": "/dev/static/animations/1f381_regular.tgs"
+            },
+            "premium_gift_box": {
+                "type": "premium_gift_box",
+                "emoji": "🎁",
+                "star_count": 300,
+                "bet_types": ["medium", "high"],
+                "animation_path": "/dev/static/animations/1f381_limited.tgs",
+                "thumbnail_path": "/dev/static/thumbnails/1f381_limited.webp",
+                "gift_type": "limited",
+                "is_limited": true,
+                // Для обратной совместимости
+                "value": 300,
+                "animation": "/dev/static/animations/1f381_limited.tgs"
+            }
+        };
+
+        // Настройки по умолчанию до загрузки с сервера
+        window.appSettings = {
+            // Типы ставок
+            BET_TYPES: {
+                "low": {
+                    "price": 25,
+                    "symbol": "crystal",
+                    "name": "Маленькая"
+                },
+                "medium": {
+                    "price": 50,
+                    "symbol": "crystal",
+                    "name": "Средняя"
+                },
+                "high": {
+                    "price": 100,
+                    "symbol": "crystal",
+                    "name": "Большая"
+                },
+                "ultra": {
+                    "price": 250,
+                    "symbol": "crystal",
+                    "name": "Ультра"
+                }
+            },
+
+            // Список подарков для каждого типа ставки
+            LOTTERY_WHEELS: {
+                "low": ["teddy_bear", "gift_box", "heart", "cup", "cake", "champagne", "date_calendar"],
+                "medium": ["gift_box", "cup", "heart", "cake", "champagne", "premium_gift_box", "luxury_gift_box", "candle"],
+                "high": ["gift_box", "premium_gift_box", "luxury_gift_box", "candle", "date_calendar"],
+                "ultra": ["premium_gift_box", "luxury_gift_box", "candle", "date_calendar", "cup"]
+            },
+
+            // Подарки и их шансы для каждого типа ставки
+            BET_GIFTS: {
+                "low": {
+                    "teddy_bear": {
+                        "emoji": "🧸",
+                        "star_count": 15,
+                        "chance": 35.5,
+                        "animation_path": "/static/animations/1f9f8_regular.tgs",
+                        "thumbnail_path": "/static/thumbnails/1f9f8_regular.webp",
+                        "type": "regular"
+                    },
+                    "gift_box": {
+                        "emoji": "🎁",
+                        "star_count": 25,
+                        "chance": 20.0,
+                        "animation_path": "/static/animations/1f381_regular.tgs",
+                        "thumbnail_path": "/static/thumbnails/1f381_regular.webp",
+                        "type": "regular"
+                    },
+                    "heart": {
+                        "emoji": "💝",
+                        "star_count": 15,
+                        "chance": 15.0,
+                        "animation_path": "/static/animations/1f49d_regular.tgs",
+                        "thumbnail_path": "/static/thumbnails/1f49d_regular.webp",
+                        "type": "regular"
+                    },
+                    "cup": {
+                        "emoji": "🏆",
+                        "star_count": 100,
+                        "chance": 10.0,
+                        "animation_path": "/static/animations/1f3c6_regular.tgs",
+                        "thumbnail_path": "/static/thumbnails/1f3c6_regular.webp",
+                        "type": "regular"
+                    },
+                    "cake": {
+                        "emoji": "🎂",
+                        "star_count": 50,
+                        "chance": 8.5,
+                        "animation_path": "/static/animations/1f382_regular.tgs",
+                        "thumbnail_path": "/static/thumbnails/1f382_regular.webp",
+                        "type": "regular"
+                    },
+                    "champagne": {
+                        "emoji": "🍾",
+                        "star_count": 50,
+                        "chance": 4.75,
+                        "animation_path": "/static/animations/1f37e_regular.tgs",
+                        "thumbnail_path": "/static/thumbnails/1f37e_regular.webp",
+                        "type": "regular"
+                    },
+                    "date_calendar": {
+                        "emoji": "🗓",
+                        "star_count": 150,
+                        "chance": 1.25,
+                        "animation_path": "/static/animations/1f5d3_upgradable.tgs",
+                        "thumbnail_path": "/static/thumbnails/1f5d3_upgradable.webp",
+                        "type": "upgradable"
+                    }
+                },
+                "medium": {
+                    "gift_box": {
+                        "emoji": "🎁",
+                        "star_count": 25,
+                        "chance": 30.0,
+                        "animation_path": "/static/animations/1f381_regular.tgs",
+                        "thumbnail_path": "/static/thumbnails/1f381_regular.webp",
+                        "type": "regular"
+                    },
+                    "cup": {
+                        "emoji": "🏆",
+                        "star_count": 100,
+                        "chance": 25.0,
+                        "animation_path": "/static/animations/1f3c6_regular.tgs",
+                        "thumbnail_path": "/static/thumbnails/1f3c6_regular.webp",
+                        "type": "regular"
+                    }
+                },
+                "high": {
+                    "premium_gift_box": {
+                        "emoji": "🎁",
+                        "star_count": 300,
+                        "chance": 35.0,
+                        "animation_path": "/static/animations/1f381_limited.tgs",
+                        "thumbnail_path": "/static/thumbnails/1f381_limited.webp",
+                        "type": "limited"
+                    }
+                }
+            }
+        };
+    </script>
+</head>
+<body oncontextmenu="return false;">
+    <!-- SVG-спрайт с иконкой кристалла -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <symbol id="crystal-icon" viewBox="0 0 367 304">
+            <path d="M181.766 11.0664L116.552 88.5311H249.754L181.766 11.0664Z" />
+            <path d="M0 88.5311H95.7391L65.2136 5.85867L0 88.5311Z" />
+            <path d="M174.828 0H76.3138L106.839 88.5311L174.828 0Z" />
+            <path d="M259.467 88.5311L190.785 0H289.992L259.467 88.5311Z" />
+            <path d="M271.261 88.5311L300.399 5.85867L367 88.5311H271.261Z" />
+            <path d="M267.098 99.5974H367L197.722 293.585L267.098 99.5974Z" />
+            <path d="M181.766 304L255.304 99.5974H111.002L181.766 304Z" />
+            <path d="M100.595 99.5974L168.584 293.585L0 99.5974H100.595Z" />
+        </symbol>
+    </svg>
+
+    <!-- Индикатор режима разработки -->
+
+    <div style="position: fixed; top: 0; left: 0; width: 100%; text-align: center; font-size: 10px; color: red; z-index: 9999; background: transparent;">dev mode</div>
+
+
+    <!-- Прелоадер -->
+    <div id="preloader" class="preloader">
+        <div class="dice-loader">
+            <tgs-player src="/dev/static/preloader.tgs" autoplay style="width: 60px; height: 60px;"></tgs-player>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">
+                    <!-- Аватарка пользователя будет добавлена через JavaScript -->
+                </div>
+                <div class="user-details">
+                    <div class="user-name" id="userName">Пользователь</div>
+                    <div class="user-exp-container" id="headerExpContainer">
+                        <!-- Шкала прогресса и информация об уровне будут добавлены через JavaScript -->
+                    </div>
+                </div>
+                <div class="balance-display" id="balanceDisplay">
+                    <span id="balanceValue">10</span>
+                    <span class="diamond">
+                        <svg class="crystal-icon crystal-icon--medium crystal-icon--balance"><use xlink:href="#crystal-icon"></use></svg>
+                    </span>
+                </div>
+            </div>
+
+            <div class="bet-options">
+                <div class="bet-option" data-bet="low">
+                    <span>25</span> <span class="diamond">
+                        <svg class="crystal-icon crystal-icon--medium crystal-icon--balance"><use xlink:href="#crystal-icon"></use></svg>
+                    </span>
+                </div>
+                <div class="bet-option" data-bet="medium">
+                    <span>50</span> <span class="diamond">
+                        <svg class="crystal-icon crystal-icon--medium crystal-icon--balance"><use xlink:href="#crystal-icon"></use></svg>
+                    </span>
+                </div>
+                <div class="bet-option" data-bet="high">
+                    <span>100</span> <span class="diamond">
+                        <svg class="crystal-icon crystal-icon--medium crystal-icon--balance"><use xlink:href="#crystal-icon"></use></svg>
+                    </span>
+                </div>
+                <div class="bet-option" data-bet="ultra">
+                    <span>250</span> <span class="diamond">
+                        <svg class="crystal-icon crystal-icon--medium crystal-icon--balance"><use xlink:href="#crystal-icon"></use></svg>
+                    </span>
+                </div>
+            </div>
+        </header>
+
+        <div class="lottery-container">
+            <div class="lottery-window">
+                <div class="lottery-items" id="lotteryItems"></div>
+                <div class="indicator"></div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <button class="spin-button" id="spinButton" data-i18n="main_page.spin_button">Мне повезёт, Go! <span class="free-tag">FREE</span></button>
+
+            <div class="demo-mode" id="demoModeToggle">
+                <span>DEMO</span>
+                <label class="switch">
+                    <input type="checkbox" id="demoMode">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="skip-button" id="skipAnimationButton" style="display: none;">
+                <span>⏩</span>
+            </div>
+
+            <div class="chances-section">
+                <h3 data-i18n="main_page.possible_win">Вы можете выиграть...</h3>
+                <div class="gifts-container" id="giftsContainer"></div>
+            </div>
+        </div>
+
+        <!-- Модальное окно выигрыша -->
+        <div class="win-modal" id="winModal">
+            <h2 data-i18n="gifts.win_title">Поздравляем!</h2>
+            <div class="won-gift" id="wonGift"></div>
+            <div class="gift-name" id="giftName"></div>
+            <div class="win-actions">
+                <button class="action-button" id="receiveGift" data-i18n="gifts.receive">Получить</button>
+                <button class="action-button" id="keepGift" data-i18n="gifts.keep">В профиль</button>
+                <button class="action-button" id="sellGift" data-i18n="gifts.sell_for">Продать за 0<svg class="crystal-icon crystal-icon--medium crystal-icon--balance"><use xlink:href="#crystal-icon"></use></svg></button>
+            </div>
+        </div>
+
+        <!-- Новое модальное окно для демо-режима -->
+        <div class="win-modal" id="demoWinModal">
+            <h2 data-i18n="gifts.demo_win_title">Вы выиграли подарок!</h2>
+            <div class="won-gift" id="demoWonGift"></div>
+            <div class="gift-name" data-i18n="gifts.demo_description">Демо-режим нужен для тестирования шансов выпадения подарков.</div>
+            <div class="win-actions">
+                <button class="action-button" id="demoCloseBtn" data-i18n="common.close">Закрыть</button>
+                <button class="action-button" id="demoDisableBtn" data-i18n="gifts.disable_demo">Отключить демо-режим</button>
+            </div>
+        </div>
+
+        <!-- Шаблон нижней навигации -->
+
+<!-- Метатеги для предотвращения кэширования в режиме разработки -->
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+
+
+<!-- Подключаем SVG спрайт для навигации -->
+<!-- Иконки имеют микро-коррекции в CSS для идеального выравнивания по горизонтали -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <defs>
+    <!-- Иконка профиля -->
+    <symbol id="nav-profile" viewBox="0 0 270 300">
+      <circle cx="133.438" cy="72.9277" r="72.9277" fill="currentColor"/>
+      <path d="M184.347 156.727C219.673 171.481 266.291 208.8 269.013 281.218C269.409 291.766 260.53 299.999 249.975 299.999H19.2792C9.24903 299.999 0.661199 292.56 0.871963 282.532C1.6794 244.153 19.3712 185.75 85.1181 157.563C99.51 165.871 116.211 170.625 134.022 170.625C152.423 170.625 169.638 165.55 184.347 156.727Z" fill="currentColor"/>
+    </symbol>
+
+    <!-- Иконка игр -->
+    <symbol id="nav-games" viewBox="0 0 341 300">
+      <path d="M228.434 78.0181C248.187 93.6941 251.493 122.415 235.817 142.168L167.695 228.007C152.018 247.76 123.298 251.067 103.544 235.39L17.7047 167.269C-2.04857 151.592 -5.35389 122.871 10.3223 103.117L78.4443 17.2778C94.1201 -2.47516 122.842 -5.77989 142.595 9.89621L228.434 78.0181ZM71.3365 116.579C64.1732 110.894 53.7582 112.093 48.0735 119.257C42.3888 126.419 43.5876 136.834 50.7506 142.519C57.9138 148.204 68.3295 147.006 74.0142 139.843C79.699 132.679 78.4997 122.264 71.3365 116.579ZM140.512 171.475C133.348 165.791 122.933 166.99 117.248 174.153C111.563 181.317 112.762 191.731 119.925 197.416C127.088 203.1 137.504 201.903 143.189 194.739C148.874 187.577 147.675 177.16 140.512 171.475ZM133.371 109.442C126.208 103.758 115.793 104.957 110.108 112.119C104.423 119.283 105.622 129.698 112.784 135.383C119.948 141.068 130.364 139.869 136.049 132.706C141.734 125.543 140.534 115.127 133.371 109.442ZM195.407 102.304C188.244 96.6193 177.829 97.8178 172.144 104.981C166.459 112.145 167.658 122.56 174.82 128.245C181.984 133.93 192.4 132.731 198.085 125.567C203.769 118.405 202.57 107.989 195.407 102.304ZM126.232 47.4061C119.069 41.7214 108.654 42.9201 102.969 50.0832C97.2844 57.2464 98.4819 67.6622 105.645 73.3469C112.809 79.0316 123.224 77.8323 128.909 70.6691C134.594 63.5059 133.395 53.0909 126.232 47.4061Z" fill="currentColor"/>
+      <path d="M295.207 99.0918C320.425 99.0918 340.868 119.536 340.868 144.753V254.339C340.868 279.556 320.425 300 295.208 300H185.622C161.735 300 142.134 281.655 140.133 258.286C151.251 256.535 161.769 250.771 169.316 241.261L249.903 139.713C259.341 127.821 262.021 112.737 258.481 99.0918H295.207ZM240.279 182.799C231.134 182.799 223.72 190.213 223.72 199.358C223.72 208.503 231.134 215.916 240.279 215.916C249.423 215.916 256.836 208.503 256.836 199.358C256.836 190.213 249.423 182.799 240.279 182.799Z" fill="currentColor"/>
+    </symbol>
+
+    <!-- Иконка заданий -->
+    <symbol id="nav-tasks" viewBox="0 0 363 300">
+      <path d="M180.157 10.9208L115.832 87.3662H247.22L180.157 10.9208Z" fill="currentColor"/>
+      <path d="M0.868164 87.3662H95.3029L65.1933 5.78158L0.868164 87.3662Z" fill="currentColor"/>
+      <path d="M173.314 0H76.1423L106.252 87.3662L173.314 0Z" fill="currentColor"/>
+      <path d="M256.8 87.3662L189.053 0H286.91L256.8 87.3662Z" fill="currentColor"/>
+      <path d="M268.433 87.3662L297.174 5.78158L362.868 87.3662H268.433Z" fill="currentColor"/>
+      <path d="M264.328 98.2869H362.868L195.897 289.722L264.328 98.2869Z" fill="currentColor"/>
+      <path d="M180.157 300L252.694 98.2869H110.358L180.157 300Z" fill="currentColor"/>
+      <path d="M100.093 98.2869L167.156 289.722L0.868164 98.2869H100.093Z" fill="currentColor"/>
+    </symbol>
+
+    <!-- Иконка лидерборда -->
+    <symbol id="nav-leaderboard" viewBox="0 0 354 300">
+      <path d="M160.272 285.036V209.92L177.136 212.252L194 209.92V285.036H160.272Z" fill="currentColor"/>
+      <path d="M58.0313 28.4753C58.0313 28.4753 -0.211937 3.89505 0.000629825 52.0389C0.000629825 52.0389 -0.566216 94.561 32.3107 129.428C32.3107 129.428 57.9604 160.168 102.387 171.89C102.387 171.89 90.058 155.862 83.8935 143.662C83.8935 143.662 43.5059 124.285 28.9805 84.3342C28.9805 84.3342 3.33084 29.492 57.9604 48.9888V28.4753H58.0313Z" fill="currentColor"/>
+      <path d="M281.515 0C286.605 0.000123469 290.849 3.81352 291.167 8.89355C292.478 29.8445 293.791 83.3483 276.86 120.748C276.86 120.748 260.421 164.288 230.308 189.944C230.196 190.046 205.937 212.252 176.741 212.252C147.545 212.252 123.285 190.045 123.175 189.944C93.0613 164.347 76.6222 120.748 76.6222 120.748C59.6946 83.354 60.9596 29.861 62.2521 8.90332C62.5656 3.81917 66.8125 0 71.9063 0H281.515ZM183.787 40.541C181.02 34.7284 177.216 33.8513 175.659 34.1396C171.786 34.2783 168.858 39.618 167.878 42.2705L157.849 62.8574C154.114 70.7452 150.067 72.3143 148.165 72.1992L120.497 75.6582C109.084 77.5613 112.024 87.0769 115.483 89.8447L117.903 91.9199C119.46 93.0732 123.679 96.3487 128.106 100.224C132.532 104.099 141.94 103.799 146.09 103.165L176.352 99.0127C182.161 98.4592 180.386 100.858 178.773 102.127L172.201 105.587L147.992 117.869C141.075 121.606 138.539 129.23 138.136 132.574L136.406 146.414C135.715 151.673 137.847 154.141 139 154.718C143.703 156.932 147.3 155.64 148.511 154.718C155.14 151.431 169.158 144.407 172.201 142.607C175.244 140.809 178.657 141.858 179.983 142.607C186.035 146.067 199.281 153.542 203.846 155.756C208.411 157.97 212.549 156.217 214.048 155.063C216.815 153.403 217.046 148.259 216.816 145.895C215.663 137.014 213.288 118.7 213.011 116.485C212.734 114.272 213.587 112.681 214.048 112.161L234.108 92.6123C238.949 87.7686 241.197 85.6925 240.159 80.5029C239.422 76.8164 232.494 75.14 228.92 74.7939C225.231 74.448 215.743 73.4793 207.305 72.3721C198.867 71.2649 196.584 66.6888 195.373 64.2412C192.664 58.7632 186.554 46.3539 183.787 40.541Z" fill="currentColor"/>
+      <path d="M295.664 28.4753C295.664 28.4753 353.907 3.89505 353.694 52.0389C353.694 52.0389 354.261 94.561 321.384 129.428C321.384 129.428 295.735 160.168 251.308 171.89C251.308 171.89 263.637 155.862 269.801 143.662C269.801 143.662 310.189 124.285 324.714 84.3342C324.714 84.3342 350.364 29.492 295.734 48.9888V28.4753H295.664Z" fill="currentColor"/>
+      <path d="M262.545 252.273H90.25C81.9657 252.273 75.25 258.989 75.25 267.273V285C75.25 293.285 81.9657 300 90.25 300H262.545C270.83 300 277.545 293.285 277.545 285V267.273C277.545 258.989 270.83 252.273 262.545 252.273Z" fill="currentColor"/>
+      <path d="M194.317 238.627H159.924C147.703 238.627 137.796 248.534 137.796 260.755C137.796 272.976 147.703 282.883 159.924 282.883H194.317C206.538 282.883 216.446 272.976 216.446 260.755C216.446 248.534 206.538 238.627 194.317 238.627Z" fill="currentColor"/>
+    </symbol>
+
+    <!-- Иконка розыгрышей -->
+    <symbol id="nav-events" viewBox="0 0 380 252">
+        <path d="M240.005 0C264.995 0 285.252 20.2448 285.252 45.2178V70.2189C285.252 79.4834 280.027 87.9576 271.747 92.1231C253.739 101.182 253.739 126.872 271.747 135.93C280.027 140.095 285.252 148.57 285.252 157.834V180.871C285.252 205.845 264.995 226.089 240.005 226.089H194.758V189.718C194.758 181.575 188.153 174.973 180.004 174.973C171.855 174.973 165.25 181.575 165.25 189.718V226.089H45.2469C20.2578 226.089 0 205.845 0 180.871V157.834C0.000276319 148.57 5.22494 140.095 13.5057 135.93C31.5131 126.872 31.5127 101.182 13.5057 92.1231C5.22503 87.9576 0.000219937 79.4834 0 70.2189V45.2178C0 20.2448 20.2578 0 45.2469 0H165.25V36.3708C165.25 44.5141 171.855 51.1157 180.004 51.1157C188.153 51.1157 194.758 44.5141 194.758 36.3708V0H240.005ZM180.004 84.5375C171.855 84.5375 165.25 91.1391 165.25 99.2825V126.806C165.25 134.95 171.855 141.551 180.004 141.551C188.153 141.551 194.758 134.95 194.758 126.806V99.2825C194.758 91.1391 188.153 84.5375 180.004 84.5375Z" fill="currentColor"/>
+        <path d="M315.274 42.2617C342.115 42.2617 363.872 64.0201 363.872 90.8602V117.731C363.872 127.688 358.26 136.796 349.366 141.273C330.024 151.009 330.024 178.619 349.366 188.354C358.26 192.831 363.872 201.939 363.872 211.896V236.656C363.872 263.497 342.115 285.254 315.274 285.254H106.089C83.6346 285.254 64.7402 270.026 59.1636 249.334H247.658C282.668 249.334 311.048 220.954 311.048 185.944V161.185L311.022 159.73C310.513 145.24 302.399 132.078 289.688 125.107L288.401 124.431C279.915 120.159 279.913 108.046 288.401 103.773L289.688 103.097C302.824 95.8938 311.048 82.0789 311.048 67.0191V42.2617H315.274Z" fill="currentColor"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="bottom-nav">
+    <div class="nav-item">
+        <div class="nav-icon leaderboard-icon">
+            <svg class="nav-icon-svg" aria-hidden="true">
+                <use href="#nav-leaderboard"></use>
+            </svg>
+        </div>
+        <div class="nav-text" data-i18n="common.leaderboard">Лидеры</div>
+    </div>
+    <div class="nav-item">
+        <div class="nav-icon events-icon">
+            <svg class="nav-icon-svg" aria-hidden="true">
+                <use href="#nav-events"></use>
+            </svg>
+        </div>
+        <div class="nav-text" data-i18n="common.giveaways">Розыгрыши</div>
+    </div>
+    <div class="nav-item active">
+        <div class="nav-icon play-icon">
+            <svg class="nav-icon-svg" aria-hidden="true">
+                <use href="#nav-games"></use>
+            </svg>
+        </div>
+        <div class="nav-text" data-i18n="common.play">Играть</div>
+    </div>
+    <div class="nav-item">
+        <div class="nav-icon tasks-icon">
+            <svg class="nav-icon-svg" aria-hidden="true">
+                <use href="#nav-tasks"></use>
+            </svg>
+        </div>
+        <div class="nav-text">
+            <span data-i18n="common.tasks">Задания</span><span class="notification-dot"></span>
+        </div>
+    </div>
+    <div class="nav-item">
+        <div class="nav-icon profile-icon">
+            <svg class="nav-icon-svg" aria-hidden="true">
+                <use href="#nav-profile"></use>
+            </svg>
+        </div>
+        <div class="nav-text" data-i18n="common.profile">Профиль</div>
+    </div>
+</div>
+
+<!-- Стили для корректного отображения тем Telegram -->
+<style>
+    /* Добавляем CSS-переменные на основе цветов темы Telegram */
+    :root {
+        /* Базовый цвет кнопки Telegram для активных иконок */
+        --tg-active-icon-filter: invert(43%) sepia(97%) saturate(1752%) hue-rotate(196deg) brightness(98%) contrast(96%);
+    }
+</style>
+
+<!-- Скрипт для автоматического обнаружения и применения темы Telegram -->
+<script>
+    // Функция для определения темы Telegram и применения соответствующих классов
+    function applyTelegramTheme() {
+        const tg = window.Telegram && window.Telegram.WebApp;
+        if (!tg) return;
+
+        // Добавляем атрибут data-theme к HTML элементу
+        if (tg.colorScheme) {
+            document.documentElement.setAttribute('data-theme', tg.colorScheme);
+        }
+
+        // Если нет поддержки Telegram WebApp, определяем тему по предпочтениям системы
+        if (!tg.colorScheme) {
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+        }
+
+        // Вызываем функцию из ui-utils.js для обновления RGB-версии цветов
+        if (window.applyTelegramColorScheme) {
+            window.applyTelegramColorScheme();
+        }
+    }
+
+    // Применяем тему при загрузке страницы
+    document.addEventListener('DOMContentLoaded', applyTelegramTheme);
+
+    // Слушаем изменения темы в Telegram
+    if (window.Telegram && window.Telegram.WebApp) {
+        window.Telegram.WebApp.onEvent('themeChanged', applyTelegramTheme);
+    }
+</script>
+    </div>
+
+    <script>
+        // Добавляем переменную в window для использования в других скриптах
+        // ВАЖНО: Устанавливаем это до загрузки любых модулей
+        window.isDevMode = JSON.parse('true');
+    </script>
+
+    <script type="module">
+        // Импортируем модули для авторизации и переводов
+        import { initTelegramAuth } from '/dev/static/js/modules/telegram-auth.js';
+        import * as i18n from '/dev/static/js/modules/i18n.js';
+
+        // КРИТИЧЕСКИ ВАЖНО: Немедленная проверка авторизации Telegram WebApp
+        // Если пользователь не в Telegram, произойдет мгновенное перенаправление на auth_error
+        initTelegramAuth(true); // true = показать логи для отладки
+
+        // Делаем модуль i18n доступным глобально
+        window.i18n = i18n;
+
+        // Инициализируем модуль i18n с языком пользователя после загрузки DOM
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Получаем язык пользователя (будет загружен из Telegram только при первом запуске)
+                const userLanguage = i18n.getLanguageFromTelegram();
+                console.log('Detected user language:', userLanguage, 'isDev:', window.isDevMode);
+
+                // Инициализируем переводы - при повторных загрузках страницы будет использован localStorage
+                await i18n.initI18n(userLanguage);
+
+                // Применяем переводы ко всем элементам с атрибутом data-i18n
+                document.querySelectorAll('[data-i18n]').forEach(element => {
+                    const key = element.getAttribute('data-i18n');
+                    element.textContent = i18n.t(key);
+                });
+
+                // Запускаем инициализацию приложения только после загрузки переводов
+                const event = new Event('translationsLoaded');
+                document.dispatchEvent(event);
+                console.log('Translations loaded and applied, dispatched translationsLoaded event');
+            } catch (error) {
+                console.error('Error initializing translations:', error);
+                // В случае ошибки все равно загружаем приложение
+                document.dispatchEvent(new Event('translationsLoaded'));
+            }
+        });
+    </script>
+
+    <script type="module" src="/dev/static/js/app.js?v=5295"></script>
+</body>
+</html>
+C:\Users\уютный бубин.HOME-PC>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

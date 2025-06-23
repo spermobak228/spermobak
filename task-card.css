@@ -1,0 +1,558 @@
+/* Стили для универсальной карточки задания */
+
+/* Основной контейнер карточки */
+.task-card {
+    position: relative;
+    border-radius: 20px; /* Закругление углов */
+    background-color: var(--tg-theme-bg-color, #ffffff); /* Основной фон карточки */
+    box-shadow: none; /* Убираем тень */
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: all 0.3s ease; /* Плавная анимация для всех изменений */
+    margin-bottom: 6px; /* Уменьшенный отступ между карточками */
+    border: none;
+    transform: none; /* Убираем 3D эффект */
+}
+
+/* Эффект наведения и нажатия */
+.task-card:hover {
+    transform: translateY(-2px); /* Небольшой подъем при наведении */
+    box-shadow: none; /* Убираем тень при наведении */
+}
+
+/* Убираем эффект нажатия для карточки */
+
+/* Стиль для важных заданий */
+.task-card-important {
+    background: var(--tg-theme-bg-color, #ffffff); /* Убираем градиент, оставляем только фон */
+    box-shadow: none; /* Убираем тень */
+}
+
+/* Фоновое изображение */
+.task-card-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.05; /* Слабая видимость фонового изображения */
+    z-index: 0;
+    transition: opacity 0.3s ease;
+}
+
+.task-card:hover .task-card-bg {
+    opacity: 0.09; /* Увеличение видимости фона при наведении */
+}
+
+/* Верхняя часть карточки с акцентной полосой */
+.task-header {
+    position: relative;
+    z-index: 1;
+    padding: 16px 16px 12px; /* Отступы сверху, по бокам и снизу */
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Выравниваем по центру для лучшего совпадения */
+    gap: 12px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.03); /* Тонкая линия разделения */
+    background-color: var(--tg-theme-secondary-bg-color, #f0f0f0); /* Фон верхней части */
+}
+
+/* Заголовок задания */
+.task-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--tg-theme-text-color, #000);
+    margin: 0;
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.2;
+    min-width: 0; /* Позволяет flex-элементу сжиматься */
+}
+
+/* Убираем отступы справа у заголовка, так как элементы теперь в потоке */
+
+/* Контейнер для кнопки/таймера/статуса */
+.task-action {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Расстояние между элементами в блоке действий */
+    flex-shrink: 0;
+    height: 32px; /* Фиксированная высота контейнера */
+    margin-top: -1px; /* Уменьшаем отступ сверху для лучшего выравнивания */
+}
+
+/* Описание задания с отступами */
+.task-description {
+    font-size: 14px;
+    color: var(--tg-theme-hint-color, #999);
+    margin: 0;
+    line-height: 1.4;
+    position: relative;
+    z-index: 1;
+    padding: 12px 16px;
+    border-bottom: none; /* Убираем линию разделения */
+    background-color: var(--tg-theme-secondary-bg-color, #f0f0f0); /* Унифицированный фон */
+    opacity: 0.8; /* Прозрачность среднего блока 80% */
+    /* Убираем ограничения по высоте для адаптивности */
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+/* Нижняя часть карточки (награда + прогресс) */
+.task-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    z-index: 1;
+    padding: 12px 16px;
+    background-color: var(--tg-theme-secondary-bg-color, #f0f0f0); /* Унифицированный фон */
+    opacity: 0.8; /* Прозрачность нижнего блока 80% */
+}
+
+/* Стили для отображения награды */
+.task-reward {
+    display: flex;
+    align-items: center;
+    gap: 0px; /* Уменьшаем отступ между числом и иконкой награды */
+    background-color: rgba(var(--tg-theme-text-color-rgb, 0, 0, 0), 0.05); /* Слегка затемненный фон */
+    padding: 5px 10px;
+    border-radius: 20px; /* Закругление блока награды */
+    transition: all 0.2s ease;
+}
+
+/* Сбрасываем непрозрачность для текста и иконки внутри блока награды для активных карточек */
+.task-footer .task-reward .reward-value,
+.task-footer .task-reward .reward-icon,
+.task-footer .task-reward .crystal-icon {
+    opacity: 1.25; /* Компенсируем непрозрачность родительского элемента */
+}
+
+/* Не меняем непрозрачность для выполненных карточек */
+.task-card.completed .task-footer .task-reward .reward-value,
+.task-card.completed .task-footer .task-reward .reward-icon,
+.task-card.completed .task-footer .task-reward .crystal-icon {
+    opacity: 0.8; /* Возвращаем исходную непрозрачность для выполненных карточек */
+}
+
+.task-card:hover .task-reward {
+    transform: none; /* Убираем увеличение блока награды при наведении */
+}
+
+/* Стилизация награды */
+.reward-value {
+    font-weight: 500; /* Уменьшаем толщину шрифта с 600 до 500 */
+    color: var(--tg-theme-text-color, #000); /* Цвет в соответствии с темой */
+    font-size: 18px; /* Размер текста с количеством */
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.reward-icon {
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    line-height: 1;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* Стили для SVG иконки кристалла в карточке задания */
+.reward-icon.diamond {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.reward-icon .crystal-icon {
+    width: 16px;
+    height: 16px;
+    fill: var(--tg-theme-text-color, #000);
+    margin-left: -2px; /* Уменьшаем отступ от числа */
+    vertical-align: baseline; /* Выравнивание по базовой линии */
+    display: inline-flex;
+    align-items: center;
+}
+
+/* Стиль для контейнера с наградой */
+.task-reward.currency-reward {
+    background-color: rgba(var(--tg-theme-text-color-rgb, 0, 0, 0), 0.05); /* Слегка затемненный фон */
+    border-radius: 14px; /* Увеличенное скругление для большей плашки */
+    padding: 6px 10px; /* Увеличенные отступы: вертикальный и горизонтальный */
+    display: inline-flex;
+    align-items: center; /* Выравнивание по центру для лучшего вида */
+    height: auto;
+    min-height: 28px; /* Соответствует высоте блока */
+}
+
+/* Класс для контейнера награды */
+.task-reward-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+/* Добавляем класс-обертку для всех типов плашек с наградой */
+.reward-wrapper {
+    display: inline-flex;
+    align-items: center;
+}
+
+/* Стили для отображения прогресса */
+.task-status {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Уменьшаем отступ между полосой прогресса и текстом */
+    flex: 1;
+    justify-content: flex-end;
+    margin-top: 12px; /* Единый отступ от контента выше */
+}
+
+.task-progress-text {
+    font-size: 12px;
+    color: var(--tg-theme-hint-color, #999);
+    min-width: auto; /* Позволяем ширине адаптироваться к содержимому */
+    width: auto; /* Авто-ширина для адаптации к тексту */
+    text-align: left; /* Выравниваем по левому краю для лучшего вида рядом с полосой */
+    font-weight: 500;
+    order: 2; /* Перемещаем в конец флекс-контейнера */
+    white-space: nowrap; /* Предотвращаем перенос текста */
+}
+
+.task-progress {
+    height: 6px; /* Высота прогресс-бара */
+    background-color: rgba(var(--tg-theme-text-color-rgb, 0, 0, 0), 0.05); /* Слегка затемненный фон */
+    border-radius: 10px;
+    overflow: hidden;
+    width: 100%;
+    max-width: 160px; /* Увеличенная максимальная ширина прогресс-бара */
+    position: relative;
+    order: 1; /* Перемещаем в начало флекс-контейнера */
+}
+
+.task-progress-bar {
+    height: 100%;
+    background-color: var(--tg-theme-button-color, #2481cc); /* Цвет полосы прогресса */
+    border-radius: 10px;
+    transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1); /* Плавная анимация изменения ширины */
+}
+
+/* Кнопка действия */
+.task-button {
+    padding: 7px 14px;
+    border-radius: 12px;
+    background-color: var(--tg-theme-button-color, #2481cc); /* Цвет кнопки из темы */
+    color: var(--tg-theme-button-text-color, #fff); /* Цвет текста кнопки из темы */
+    font-size: 13px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    box-shadow: none; /* Убираем тень кнопки */
+}
+
+/* Большая кнопка как на скриншоте - в верхнем правом углу */
+.task-button {
+    position: relative; /* Изменяем на relative для работы в контейнере */
+    margin: 0;
+    padding: 6px 12px;
+    font-size: 13px;
+    height: 32px;
+    border-radius: 16px; /* Максимальное закругление (половина высоты) */
+    min-width: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0; /* Не сжимается */
+}
+
+/* Убираем сдвиг кнопки - теперь элементы заменяют друг друга */
+
+/* Убираем эффекты hover и active для кнопки, чтобы карточка не подпрыгивала */
+
+/* Таймер */
+.task-timer {
+    padding: 6px 10px;
+    border-radius: 16px; /* Максимальное закругление, как у кнопки */
+    background-color: rgba(var(--tg-theme-text-color-rgb, 0, 0, 0), 0.05); /* Слегка затемненный фон */
+    color: var(--tg-theme-text-color, #000);
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 500;
+    position: relative; /* Изменяем на relative для работы в контейнере */
+    height: 32px; /* Такая же высота как у кнопки */
+    min-width: 90px; /* Такая же минимальная ширина как у кнопки */
+    justify-content: center; /* Центрируем содержимое */
+    flex-shrink: 0; /* Не сжимается */
+}
+
+.task-timer::before {
+    content: "⏱"; /* Иконка таймера */
+    font-size: 11px;
+    opacity: 0.7;
+}
+
+/* Стили для выполненных заданий */
+.task-card.completed {
+    opacity: 0.85; /* Затемнение выполненных заданий */
+}
+
+/* Скрываем прогресс и кнопку для выполненных заданий */
+.task-card.completed .task-status,
+.task-card.completed .task-button {
+    display: none;
+}
+
+/* Добавляем галочку для выполненных заданий с помощью псевдоэлемента */
+.task-card.completed .task-action::after {
+    content: "";
+    width: 32px; /* Унифицируем размер с кнопкой и таймером */
+    height: 32px;
+    border-radius: 50%; /* Круглая форма */
+    background-color: var(--tg-theme-button-color, #2481cc); /* Цвет фона из темы */
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: none; /* Убираем тень для объемности */
+    animation: completed-pulse 0.6s ease-out; /* Ускоренная анимация появления */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'%3E%3Cpath fill='white' d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E");
+    background-position: center;
+    background-repeat: no-repeat;
+    flex-shrink: 0; /* Не сжимается */
+}
+
+.task-card.completed .task-header {
+    opacity: 0.8; /* Дополнительное затемнение заголовка */
+}
+
+.task-card.completed .task-title,
+.task-card.completed .task-description {
+    color: var(--tg-theme-hint-color, #999); /* Серый цвет для текста выполненных заданий */
+}
+
+.task-card.completed .task-progress-bar {
+    background-color: var(--tg-theme-hint-color, #999); /* Серый цвет для прогресс-бара */
+}
+
+/* Анимация для иконки выполнения */
+@keyframes completed-pulse {
+    0% { transform: scale(0.8); opacity: 0; } /* Начало анимации - почти нормальный размер */
+    50% { transform: scale(1.05); opacity: 1; } /* Середина - слегка увеличенный размер */
+    100% { transform: scale(1); opacity: 1; } /* Конец - нормальный размер */
+}
+
+/* Стили для горящих заданий (с малым временем) */
+.task-card.burning {
+    animation: fire-pulse 2s infinite alternate; /* Пульсирующая анимация */
+}
+
+.task-card.burning .task-timer {
+    background-color: rgba(255, 59, 48, 0.15); /* Красноватый фон для таймера */
+    color: rgba(255, 59, 48, 0.9); /* Красноватый цвет текста */
+    animation: timer-pulse 1s infinite alternate; /* Пульсирующая анимация */
+}
+
+/* Применяем одинаковый эффект горения ко всем типам карточек */
+.task-card.burning:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: none; /* Убираем градиент */
+    animation: none; /* Убираем анимацию */
+    z-index: 0;
+    pointer-events: none;
+}
+
+@keyframes fire-pulse {
+    0% {
+        box-shadow: none; /* Убираем тень */
+        opacity: 0.4;
+    }
+    100% {
+        box-shadow: none; /* Убираем тень */
+        opacity: 0.8;
+    }
+}
+
+@keyframes timer-pulse {
+    0% {
+        opacity: 0.85; /* Начальная прозрачность */
+        transform: scale(0.98); /* Начальный размер */
+    }
+    100% {
+        opacity: 1; /* Конечная прозрачность */
+        transform: scale(1.02); /* Конечный увеличенный размер */
+    }
+}
+
+/* Адаптивность для разных размеров экрана */
+@media screen and (max-width: 450px) {
+    .task-card {
+        border-radius: 16px; /* Меньшие скругления для маленьких экранов */
+    }
+    
+    .task-header {
+        padding: 14px 14px 10px; /* Уменьшенные отступы */
+    }
+    
+    .task-description {
+        padding: 10px 14px;
+    }
+    
+    .task-footer {
+        padding: 10px 14px;
+    }
+    
+    .task-title {
+        font-size: 15px; /* Меньший размер заголовка */
+    }
+    
+    .task-description {
+        font-size: 13px; /* Меньший размер описания */
+    }
+    
+    .task-button {
+        padding: 6px 12px; /* Уменьшенные отступы кнопки */
+        font-size: 12px;
+    }
+    
+    .task-progress {
+        max-width: 120px; /* Адаптируем ширину прогресс-бара для маленьких экранов */
+    }
+    
+    .task-status {
+        gap: 4px; /* Еще меньший отступ между полосой и текстом на маленьких экранах */
+    }
+    
+    .task-progress-text {
+        font-size: 11px; /* Уменьшаем размер текста на маленьких экранах */
+    }
+}
+
+/* Дополнительные медиа-запросы для очень маленьких экранов (до 350px) */
+@media screen and (max-width: 350px) {
+    .task-button {
+        min-width: 80px;
+        padding: 6px 8px;
+        font-size: 12px;
+    }
+
+    .task-title {
+        font-size: 15px;
+    }
+
+    .task-description {
+        font-size: 13px;
+    }
+    
+    .task-progress {
+        max-width: 80px; /* Еще более уменьшаем ширину прогресс-бара для очень маленьких экранов */
+    }
+    
+    .task-status {
+        gap: 3px; /* Минимальный отступ для очень маленьких экранов */
+    }
+    
+    .task-progress-text {
+        font-size: 10px; /* Еще меньший размер текста для очень маленьких экранов */
+    }
+}
+
+/* Сетка для отображения задач */
+.tasks-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Адаптивная сетка */
+    gap: 6px; /* Уменьшенный отступ между карточками в сетке */
+    margin: 0;
+}
+
+/* Сделаем важные задания занимающими всю ширину */
+.task-card-important {
+    grid-column: 1 / -1; /* Растянуть на всю доступную ширину */
+}
+
+/* Дополнительные анимации */
+.task-card {
+    animation: none; /* Убираем анимацию появления карточки */
+}
+
+@keyframes card-appear {
+    from {
+        opacity: 0; /* Начинаем с прозрачности */
+        transform: translateY(10px); /* Упрощенная анимация */
+    }
+    to {
+        opacity: 1; /* Конечная нормальная прозрачность */
+        transform: translateY(0); /* Упрощенная анимация */
+    }
+}
+
+/* Стили для модального окна завершения задания */
+.task-complete-reward {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 15px 0 20px 0; /* Вертикальные отступы */
+    background-color: transparent; /* Убираем фон контейнера */
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+/* Стили для плашки внутри модального окна завершения */
+.task-complete-reward .task-reward.currency-reward {
+    background-color: rgba(var(--tg-theme-text-color-rgb, 0, 0, 0), 0.05); /* Слегка затемненный фон */
+    padding: 8px 16px; /* Увеличенные отступы для модального окна */
+    border-radius: 18px; /* Больший радиус для модального окна */
+    gap: 0px; /* Уменьшаем отступ между числом и иконкой */
+}
+
+/* Стили для значения в модальном окне завершения */
+.task-complete-reward .reward-value {
+    font-size: 26px; /* Увеличенный размер для модального окна */
+    font-weight: 500; /* Уменьшаем толщину шрифта с 600 до 500 */
+}
+
+.task-complete-reward .reward-icon {
+    font-size: 22px; /* Увеличенный размер иконки для модального окна */
+}
+
+/* Стили для SVG иконки кристалла в модальном окне */
+.task-complete-reward .crystal-icon {
+    width: 22px; /* Увеличиваем размер до размера текста */
+    height: 22px; /* Увеличиваем размер до размера текста */
+    vertical-align: middle; /* Выравниваем по середине для лучшего совпадения с текстом */
+    margin-left: -2px; /* Уменьшаем отступ от числа */
+    position: relative;
+    top: 1px; /* Небольшой сдвиг вверх для точного выравнивания */
+}
+
+/* Стили для скрытия описания в ежедневных задачах */
+.task-card.daily-task .task-description {
+    display: none;
+}
+
+/* Стиль для текстовых наград (функций) - используем такой же шрифт как у заголовка */
+.task-footer .task-reward .reward-value.feature-text,
+.task-complete-reward .reward-value.feature-text {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: var(--tg-theme-text-color, #000);
+    line-height: 1.2;
+} 
